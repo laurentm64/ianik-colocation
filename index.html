@@ -179,31 +179,4 @@
   }
 
   function loadSheetData() {
-    const sheetId = '2PACX-1vSX0P6gUMOYuAHaNJpncWhcMHICIV8lqgcrIxbWHlK1yvuHzkbn3try43H1_0fP2ckAYB706JGZhdiR/pubhtml'; // Remplace par ton ID de feuille Google Sheets
-    const range = 'Statuts!A2:B10'; // Plage des données à récupérer
-    gapi.client.sheets.spreadsheets.values.get({
-      spreadsheetId: sheetId,
-      range: range,
-    }).then((response) => {
-      const data = response.result.values;
-      if (data.length > 0) {
-        // Mise à jour des statuts des chambres
-        data.forEach((row, index) => {
-          const chambre = row[0];
-          const statut = row[1];
-          const statutElement = document.getElementById('statut-' + chambre);
-          if (statutElement) {
-            statutElement.innerText = statut;
-          }
-        });
-      }
-    }, (error) => {
-      console.error('Erreur de récupération des données :', error);
-    });
-  }
-
-  // Charger l'API Google
-  gapi.load('client', initApi);
-</script>
-</body>
-</html>
+    const
