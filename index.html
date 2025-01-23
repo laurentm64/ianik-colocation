@@ -179,7 +179,7 @@
   }
 
   function loadSheetData() {
-    const sheetId = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSX0P6gUMOYuAHaNJpncWhcMHICIV8lqgcrIxbWHlK1yvuHzkbn3try43H1_0fP2ckAYB706JGZhdiR/pubhtml'; // Remplace par ton ID de feuille Google Sheets
+    const sheetId = '2PACX-1vSX0P6gUMOYuAHaNJpncWhcMHICIV8lqgcrIxbWHlK1yvuHzkbn3try43H1_0fP2ckAYB706JGZhdiR/pubhtml'; // Remplace par ton ID de feuille Google Sheets
     const range = 'Statuts!A2:B10'; // Plage des données à récupérer
     gapi.client.sheets.spreadsheets.values.get({
       spreadsheetId: sheetId,
