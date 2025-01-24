@@ -1,57 +1,77 @@
-/* Styles généraux */
-body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-  margin: 0;
-  padding: 0;
-  background-color: #f9f9f9;
-  color: #333;
-}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ianik - Maison de colocation</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Bienvenue chez Ianik</h1>
+    <p>Découvrez nos 9 chambres confortables dans une maison chaleureuse.</p>
+  </header>
 
-header {
-  text-align: center;
-  padding: 2rem;
-  background-color: #4caf50;
-  color: white;
-}
+  <main>
+    <section class="description">
+      <h2>À propos de la maison</h2>
+      <p>La maison Ianik est une colocation conviviale proposant 9 chambres modernes et équipées. Chaque chambre offre un espace confortable avec des salles d'eau privatives ou partagées, adaptées à tous les besoins.</p>
+    </section>
 
-h1 {
-  margin: 0;
-}
+    <section class="rooms">
+      <h2>Nos chambres</h2>
+      <div class="room-list">
+        <div class="room">
+          <h3>Chambre 1</h3>
+          <p>Salle d'eau privative</p>
+          <p><strong>Prix :</strong> 760 €/mois</p>
+        </div>
+        <div class="room">
+          <h3>Chambre 2</h3>
+          <p>Salle d'eau privative</p>
+          <p><strong>Prix :</strong> 760 €/mois</p>
+        </div>
+        <div class="room">
+          <h3>Chambre 3</h3>
+          <p>Salle d'eau partagée avec la chambre 4</p>
+          <p><strong>Prix :</strong> 760 €/mois</p>
+        </div>
+        <div class="room">
+          <h3>Chambre 4</h3>
+          <p>Salle d'eau partagée avec la chambre 3</p>
+          <p><strong>Prix :</strong> 720 €/mois</p>
+        </div>
+        <div class="room">
+          <h3>Chambre 5</h3>
+          <p>Salle d'eau partagée avec la chambre 6</p>
+          <p><strong>Prix :</strong> 720 €/mois</p>
+        </div>
+        <div class="room">
+          <h3>Chambre 6</h3>
+          <p>Salle d'eau partagée avec la chambre 5</p>
+          <p><strong>Prix :</strong> 720 €/mois</p>
+        </div>
+        <div class="room">
+          <h3>Chambre 7</h3>
+          <p>Salle d'eau privative</p>
+          <p><strong>Prix :</strong> 760 €/mois</p>
+        </div>
+        <div class="room">
+          <h3>Chambre 8</h3>
+          <p>Salle d'eau privative</p>
+          <p><strong>Prix :</strong> 760 €/mois</p>
+        </div>
+        <div class="room">
+          <h3>Chambre 9</h3>
+          <p>Salle d'eau privative</p>
+          <p><strong>Prix :</strong> 760 €/mois</p>
+        </div>
+      </div>
+    </section>
+  </main>
 
-main {
-  padding: 2rem;
-}
-
-section {
-  margin-bottom: 2rem;
-}
-
-.description p {
-  text-align: justify;
-}
-
-.rooms .room-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
-}
-
-.room {
-  border: 1px solid #ddd;
-  padding: 1rem;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.room h3 {
-  margin-top: 0;
-}
-
-footer {
-  text-align: center;
-  padding: 1rem;
-  background-color: #333;
-  color: white;
-}
+  <footer>
+    <p>&copy; 2025 Ianik - Maison de colocation</p>
+  </footer>
+</body>
+</html>
