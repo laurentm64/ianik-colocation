@@ -79,12 +79,19 @@
       color: black;
     }
 
+    .btn-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
     .btn {
-      display: block;
+      display: inline-block;
       width: 300px;
-      margin: 1rem auto;
-      text-align: center;
       padding: 1rem;
+      text-align: center;
       font-size: 1.2rem;
       font-weight: bold;
       color: white;
@@ -109,14 +116,14 @@
 </head>
 <body>
   <header>
-    <h1>Bienvenue chez Ianik</h1>
+    <h1>Bienvenue à la coloc ianik</h1>
     <p>Découvrez nos 9 chambres confortables dans une maison chaleureuse située à Bayonne.</p>
   </header>
 
   <main>
     <section class="description">
       <h2>À propos de la maison</h2>
-      <p>La maison Ianik est une colocation conviviale proposant 9 chambres modernes et équipées. Chaque chambre offre un espace confortable avec des salles d'eau privatives ou partagées, adaptées à tous les besoins. Située à Bayonne, elle arbore les couleurs de l'Aviron Bayonnais, en bleu et blanc.</p>
+      <p>La maison Ianik est une colocation conviviale proposant 9 chambres modernes et équipées. Chaque chambre offre un espace confortable avec des salles d'eau privatives ou partagées, adaptées à tous les besoins.</p>
     </section>
 
     <section class="rooms">
@@ -126,18 +133,20 @@
       </div>
     </section>
 
-    <!-- Boutons d'action -->
-    <a href="https://docs.google.com/presentation/d/1EcXekD9tkcNS4-WJMPIoCq9BJ0h_CwV2/export/pptx" 
-       class="btn" 
-       download>
-       Processus de réservation (PPTX)
-    </a>
+    <!-- Boutons alignés côte à côte -->
+    <div class="btn-container">
+      <a href="https://docs.google.com/presentation/d/1EcXekD9tkcNS4-WJMPIoCq9BJ0h_CwV2/export/pptx" 
+         class="btn" 
+         download>
+         Processus de réservation (PPTX)
+      </a>
 
-    <a href="https://forms.gle/kCWdKsoVQjSQGZ9x8" 
-       class="btn" 
-       target="_blank">
-       Je veux postuler pour une chambre
-    </a>
+      <a href="https://forms.gle/kCWdKsoVQjSQGZ9x8" 
+         class="btn" 
+         target="_blank">
+         Je veux postuler pour une chambre
+      </a>
+    </div>
   </main>
 
   <footer>
