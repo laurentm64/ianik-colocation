@@ -92,7 +92,7 @@
     }
 
     function loadSheetData() {
-      const range = 'Statuts!A2:B10'; // Plage des données à lire
+      const range = 'Statuts!A1:B10'; // Plage des données à lire
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
       fetch(url)
         .then(response => {
