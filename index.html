@@ -1,118 +1,57 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Réservations Ianik</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-    }
+/* Styles généraux */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  color: #333;
+}
 
-    header {
-      background-color: #007bff;
-      color: white;
-      text-align: center;
-      padding: 20px 0;
-    }
+header {
+  text-align: center;
+  padding: 2rem;
+  background-color: #4caf50;
+  color: white;
+}
 
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background: white;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
+h1 {
+  margin: 0;
+}
 
-    .chambre {
-      margin: 20px 0;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      background-color: #fefefe;
-    }
+main {
+  padding: 2rem;
+}
 
-    footer {
-      text-align: center;
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #007bff;
-      color: white;
-      border-radius: 5px;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Réservations Ianik</h1>
-  </header>
+section {
+  margin-bottom: 2rem;
+}
 
-  <div class="container">
-    <h2>Chambres disponibles</h2>
-    <p>Postulez pour une chambre en utilisant le formulaire ci-dessous :</p>
-    <a href="https://forms.gle/ton-lien-google-form" target="_blank" style="color: #007bff; font-weight: bold;">Postuler pour une chambre</a>
+.description p {
+  text-align: justify;
+}
 
-    <!-- Chambre 1 -->
-    <div class="chambre">
-      <h3>Chambre 1 - Salle d'eau privative (760 €)</h3>
-      <p>Statut : <span id="statut-chambre-1">Chargement...</span></p>
-    </div>
+.rooms .room-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
 
-    <!-- Chambre 2 -->
-    <div class="chambre">
-      <h3>Chambre 2 - Salle d'eau privative (760 €)</h3>
-      <p>Statut : <span id="statut-chambre-2">Chargement...</span></p>
-    </div>
+.room {
+  border: 1px solid #ddd;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
-    <!-- Chambre 3 -->
-    <div class="chambre">
-      <h3>Chambre 3 - Salle d'eau partagée avec Chambre 4 (760 €)</h3>
-      <p>Statut : <span id="statut-chambre-3">Chargement...</span></p>
-    </div>
-  </div>
+.room h3 {
+  margin-top: 0;
+}
 
-  <footer>
-    © 2025 Maison Ianik - Réservations en ligne
-  </footer>
-
-  <script src="https://apis.google.com/js/api.js"></script>
-  <script>
-    const spreadsheetId = '1sdgKN55I1uUB8ALPQRZnsQuB0_hMWybLh9OZJQ3Xs3M'; // Remplace par le bon ID du fichier
-    const apiKey = 'AIzaSyDo0T93zJyCFovg1-U5ShOTbW5YZZlrEDM'; // Ta clé API
-
-    function initApi() {
-      gapi.client.init({
-        apiKey: apiKey,
-      }).then(loadSheetData);
-    }
-
-    function loadSheetData() {
-      const range = 'Statuts!A1:B10'; // Plage des données à lire
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
-      fetch(url)
-        .then(response => {
-          if (!response.ok) throw new Error('Erreur réseau : ' + response.statusText);
-          return response.json();
-        })
-        .then(data => {
-          if (data.values) {
-            data.values.forEach((row, index) => {
-              const chambreId = `statut-chambre-${index + 1}`;
-              const statut = row[1] || 'Non défini'; // Colonne B : statut
-              const element = document.getElementById(chambreId);
-              if (element) element.innerText = statut;
-            });
-          }
-        })
-        .catch(error => console.error('Erreur lors du chargement des données :', error));
-    }
-
-    gapi.load('client', initApi);
-  </script>
-</body>
-</html>
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #333;
+  color: white;
+}
