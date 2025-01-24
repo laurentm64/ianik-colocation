@@ -74,42 +74,6 @@
       <h3>Chambre 3 - Salle d'eau partagée avec Chambre 4 (760 €)</h3>
       <p>Statut : <span id="statut-chambre-3">Chargement...</span></p>
     </div>
-
-    <!-- Chambre 4 -->
-    <div class="chambre">
-      <h3>Chambre 4 - Salle d'eau partagée avec Chambre 3 (720 €)</h3>
-      <p>Statut : <span id="statut-chambre-4">Chargement...</span></p>
-    </div>
-
-    <!-- Chambre 5 -->
-    <div class="chambre">
-      <h3>Chambre 5 - Salle d'eau partagée avec Chambre 6 (720 €)</h3>
-      <p>Statut : <span id="statut-chambre-5">Chargement...</span></p>
-    </div>
-
-    <!-- Chambre 6 -->
-    <div class="chambre">
-      <h3>Chambre 6 - Salle d'eau partagée avec Chambre 5 (720 €)</h3>
-      <p>Statut : <span id="statut-chambre-6">Chargement...</span></p>
-    </div>
-
-    <!-- Chambre 7 -->
-    <div class="chambre">
-      <h3>Chambre 7 - Salle d'eau privative (760 €)</h3>
-      <p>Statut : <span id="statut-chambre-7">Chargement...</span></p>
-    </div>
-
-    <!-- Chambre 8 -->
-    <div class="chambre">
-      <h3>Chambre 8 - Salle d'eau privative (760 €)</h3>
-      <p>Statut : <span id="statut-chambre-8">Chargement...</span></p>
-    </div>
-
-    <!-- Chambre 9 -->
-    <div class="chambre">
-      <h3>Chambre 9 - Salle d'eau privative (760 €)</h3>
-      <p>Statut : <span id="statut-chambre-9">Chargement...</span></p>
-    </div>
   </div>
 
   <footer>
@@ -118,36 +82,34 @@
 
   <script src="https://apis.google.com/js/api.js"></script>
   <script>
-    const sheetId = '2PACX-1vSX0P6gUMOYuAHaNJpncWhcMHICIV8lqgcrIxbWHlK1yvuHzkbn3try43H1_0fP2ckAYB706JGZhdiR';
-    const apiKey = 'AIzaSyDo0T93zJyCFovg1-U5ShOTbW5YZZlrEDM';
+    const spreadsheetId = 'TON_SPREADSHEET_ID'; // Remplace par le bon ID du fichier
+    const apiKey = 'AIzaSyDo0T93zJyCFovg1-U5ShOTbW5YZZlrEDM'; // Ta clé API
 
-    // Charger les données du Google Sheet
     function initApi() {
       gapi.client.init({
-        'apiKey': apiKey,
-      }).then(() => {
-        loadSheetData();
-      });
+        apiKey: apiKey,
+      }).then(loadSheetData);
     }
 
     function loadSheetData() {
-      const sheetUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/A2:B10?key=${apiKey}`;
-      fetch(sheetUrl)
-        .then(response => response.json())
+      const range = 'Statuts!A2:B10'; // Plage des données à lire
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?key=${apiKey}`;
+      fetch(url)
+        .then(response => {
+          if (!response.ok) throw new Error('Erreur réseau : ' + response.statusText);
+          return response.json();
+        })
         .then(data => {
-          const rows = data.values;
-          if (rows) {
-            for (let i = 1; i < rows.length; i++) { // Supposant que la 1ère ligne est l'en-tête
-              const chambreId = `statut-chambre-${i}`;
-              const statut = rows[i][1]; // Supposons que la colonne B contient les statuts
+          if (data.values) {
+            data.values.forEach((row, index) => {
+              const chambreId = `statut-chambre-${index + 1}`;
+              const statut = row[1] || 'Non défini'; // Colonne B : statut
               const element = document.getElementById(chambreId);
-              if (element) {
-                element.innerText = statut;
-              }
-            }
+              if (element) element.innerText = statut;
+            });
           }
         })
-        .catch(error => console.error('Erreur lors du chargement des données:', error));
+        .catch(error => console.error('Erreur lors du chargement des données :', error));
     }
 
     gapi.load('client', initApi);
