@@ -34,10 +34,6 @@
       margin-bottom: 2rem;
     }
 
-    .description p {
-      text-align: justify;
-    }
-
     /* Grille des chambres */
     .rooms .room-list {
       display: grid;
@@ -95,82 +91,20 @@
 </head>
 <body>
   <header>
-    <h1>Bienvenue à la maison ianik</h1>
+    <h1>Bienvenue chez Ianik</h1>
     <p>Découvrez nos 9 chambres confortables dans une maison chaleureuse située à Bayonne.</p>
   </header>
 
   <main>
     <section class="description">
       <h2>À propos de la maison</h2>
-      <p>La maison Ianik est une colocation conviviale proposant 9 chambres modernes et équipées. Chaque chambre offre un espace confortable avec des salles d'eau privatives ou partagées, adaptées à tous les besoins.</p>
+      <p>La maison Ianik est une colocation conviviale proposant 9 chambres modernes et équipées. Chaque chambre offre un espace confortable avec des salles d'eau privatives ou partagées, adaptées à tous les besoins. Située à Bayonne, elle arbore les couleurs de l'Aviron Bayonnais, en bleu et blanc.</p>
     </section>
 
     <section class="rooms">
       <h2>Nos chambres</h2>
-      <div class="room-list">
-        <!-- Chambre 1 -->
-        <div class="room">
-          <h3>Chambre 1</h3>
-          <p>Salle d'eau privative</p>
-          <p><strong>Prix :</strong> 760 €/mois</p>
-          <span class="availability available">Disponible</span>
-        </div>
-        <!-- Chambre 2 -->
-        <div class="room">
-          <h3>Chambre 2</h3>
-          <p>Salle d'eau privative</p>
-          <p><strong>Prix :</strong> 760 €/mois</p>
-          <span class="availability pending">En cours de réservation</span>
-        </div>
-        <!-- Chambre 3 -->
-        <div class="room">
-          <h3>Chambre 3</h3>
-          <p>Salle d'eau partagée avec la chambre 4</p>
-          <p><strong>Prix :</strong> 760 €/mois</p>
-          <span class="availability reserved">Réservée</span>
-        </div>
-        <!-- Chambre 4 -->
-        <div class="room">
-          <h3>Chambre 4</h3>
-          <p>Salle d'eau partagée avec la chambre 3</p>
-          <p><strong>Prix :</strong> 720 €/mois</p>
-          <span class="availability available">Disponible</span>
-        </div>
-        <!-- Chambre 5 -->
-        <div class="room">
-          <h3>Chambre 5</h3>
-          <p>Salle d'eau partagée avec la chambre 6</p>
-          <p><strong>Prix :</strong> 720 €/mois</p>
-          <span class="availability reserved">Réservée</span>
-        </div>
-        <!-- Chambre 6 -->
-        <div class="room">
-          <h3>Chambre 6</h3>
-          <p>Salle d'eau partagée avec la chambre 5</p>
-          <p><strong>Prix :</strong> 720 €/mois</p>
-          <span class="availability pending">En cours de réservation</span>
-        </div>
-        <!-- Chambre 7 -->
-        <div class="room">
-          <h3>Chambre 7</h3>
-          <p>Salle d'eau privative</p>
-          <p><strong>Prix :</strong> 760 €/mois</p>
-          <span class="availability available">Disponible</span>
-        </div>
-        <!-- Chambre 8 -->
-        <div class="room">
-          <h3>Chambre 8</h3>
-          <p>Salle d'eau privative</p>
-          <p><strong>Prix :</strong> 760 €/mois</p>
-          <span class="availability reserved">Réservée</span>
-        </div>
-        <!-- Chambre 9 -->
-        <div class="room">
-          <h3>Chambre 9</h3>
-          <p>Salle d'eau privative</p>
-          <p><strong>Prix :</strong> 760 €/mois</p>
-          <span class="availability pending">En cours de réservation</span>
-        </div>
+      <div class="room-list" id="room-list">
+        <!-- Les chambres seront ajoutées ici via JavaScript -->
       </div>
     </section>
   </main>
@@ -178,5 +112,44 @@
   <footer>
     <p>&copy; 2025 Ianik - Maison de colocation à Bayonne</p>
   </footer>
+
+  <script>
+    // URL de la Google Sheet en format CSV (remplace par ton propre lien)
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/1sHIayNCHRl1pa20suzm2R1JotMCpSUWOr5CQ2wR5Fgw/pub?output=csv";
+
+    // Chargement des données depuis la Google Sheet
+    async function loadRooms() {
+      const response = await fetch(sheetURL);
+      const data = await response.text();
+      
+      // Transformation des données CSV en tableau
+      const rows = data.split("\n").slice(1); // On ignore l'en-tête
+      const roomList = document.getElementById("room-list");
+
+      rows.forEach(row => {
+        const [roomNumber, availability] = row.split(",");
+
+        // Création de la classe de disponibilité
+        let availabilityClass = "";
+        if (availability.trim() === "Disponible") availabilityClass = "available";
+        else if (availability.trim() === "Réservée") availabilityClass = "reserved";
+        else if (availability.trim() === "En cours de réservation") availabilityClass = "pending";
+
+        // Création de l'encadré de chambre
+        const roomDiv = document.createElement("div");
+        roomDiv.className = "room";
+        roomDiv.innerHTML = `
+          <h3>Chambre ${roomNumber}</h3>
+          <p><strong>Prix :</strong> 760 €/mois</p>
+          <span class="availability ${availabilityClass}">${availability.trim()}</span>
+        `;
+
+        roomList.appendChild(roomDiv);
+      });
+    }
+
+    // Appel de la fonction au chargement de la page
+    loadRooms();
+  </script>
 </body>
 </html>
