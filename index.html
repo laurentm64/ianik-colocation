@@ -34,7 +34,6 @@
       margin-bottom: 2rem;
     }
 
-    /* Grille des chambres */
     .rooms .room-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -58,7 +57,6 @@
       margin: 0.5rem 0;
     }
 
-    /* Badge de disponibilité */
     .availability {
       display: inline-block;
       padding: 0.3rem 0.6rem;
@@ -79,6 +77,26 @@
     .pending {
       background-color: #ffc107; /* Jaune */
       color: black;
+    }
+
+    .reservation-btn {
+      display: block;
+      width: 300px;
+      margin: 2rem auto;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      background-color: #0073cf;
+      text-decoration: none;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s;
+    }
+
+    .reservation-btn:hover {
+      background-color: #005fa3;
     }
 
     footer {
@@ -107,6 +125,14 @@
         <!-- Les chambres seront ajoutées ici via JavaScript -->
       </div>
     </section>
+
+    <!-- Bouton pour télécharger le processus de réservation -->
+    <a href="https://docs.google.com/presentation/d/1EcXekD9tkcNS4-WJMPIoCq9BJ0h_CwV2/export/pptx" 
+   class="reservation-btn" 
+   download>
+   Processus de réservation (PPTX)
+</a>
+
   </main>
 
   <footer>
@@ -114,41 +140,45 @@
   </footer>
 
   <script>
-    // URL de la Google Sheet en format CSV (remplace par ton propre lien)
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-KR8PI-1On28uGKj4XJUlLQtatzEJC9pDtSXy6NSAmb4mJi_8Ygjr6PcW7w_5GbWBy42OmCKfp8lX/pub?output=csv";
+    // URL de la Google Sheet publiée au format CSV (remplace par ton URL)
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/YOUR_GOOGLE_SHEET_ID/pub?output=csv";
 
-    // Chargement des données depuis la Google Sheet
+    // Fonction pour charger les données depuis la Google Sheet
     async function loadRooms() {
-      const response = await fetch(sheetURL);
-      const data = await response.text();
-      
-      // Transformation des données CSV en tableau
-      const rows = data.split("\n").slice(1); // On ignore l'en-tête
-      const roomList = document.getElementById("room-list");
+      try {
+        const response = await fetch(sheetURL);
+        const data = await response.text();
+        
+        // Transformation des données CSV en tableau
+        const rows = data.split("\n").slice(1); // On ignore l'en-tête
+        const roomList = document.getElementById("room-list");
 
-      rows.forEach(row => {
-        const [roomNumber, availability] = row.split(",");
+        rows.forEach(row => {
+          const [roomNumber, availability] = row.split(",");
 
-        // Création de la classe de disponibilité
-        let availabilityClass = "";
-        if (availability.trim() === "Disponible") availabilityClass = "available";
-        else if (availability.trim() === "Réservée") availabilityClass = "reserved";
-        else if (availability.trim() === "En cours de réservation") availabilityClass = "pending";
+          // Création de la classe de disponibilité
+          let availabilityClass = "";
+          if (availability.trim() === "Disponible") availabilityClass = "available";
+          else if (availability.trim() === "Réservée") availabilityClass = "reserved";
+          else if (availability.trim() === "En cours de réservation") availabilityClass = "pending";
 
-        // Création de l'encadré de chambre
-        const roomDiv = document.createElement("div");
-        roomDiv.className = "room";
-        roomDiv.innerHTML = `
-          <h3>Chambre ${roomNumber}</h3>
-          <p><strong>Prix :</strong> 760 €/mois</p>
-          <span class="availability ${availabilityClass}">${availability.trim()}</span>
-        `;
+          // Création de l'encadré de chambre
+          const roomDiv = document.createElement("div");
+          roomDiv.className = "room";
+          roomDiv.innerHTML = `
+            <h3>Chambre ${roomNumber}</h3>
+            <p><strong>Prix :</strong> 760 €/mois</p>
+            <span class="availability ${availabilityClass}">${availability.trim()}</span>
+          `;
 
-        roomList.appendChild(roomDiv);
-      });
+          roomList.appendChild(roomDiv);
+        });
+      } catch (error) {
+        console.error("Erreur lors du chargement des chambres :", error);
+      }
     }
 
-    // Appel de la fonction au chargement de la page
+    // Charger les chambres au démarrage
     loadRooms();
   </script>
 </body>
