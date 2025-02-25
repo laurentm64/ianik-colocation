@@ -53,10 +53,6 @@
       color: #0073cf;
     }
 
-    .room p {
-      margin: 0.5rem 0;
-    }
-
     .availability {
       display: inline-block;
       padding: 0.3rem 0.6rem;
@@ -121,11 +117,6 @@
   </header>
 
   <main>
-    <section class="description">
-      <h2>À propos de la maison</h2>
-      <p>La maison Ianik est une colocation conviviale proposant 9 chambres modernes et équipées. Chaque chambre offre un espace confortable avec des salles d'eau privatives ou partagées, adaptées à tous les besoins.</p>
-    </section>
-
     <section class="rooms">
       <h2>Nos chambres</h2>
       <div class="room-list" id="room-list">
@@ -133,7 +124,6 @@
       </div>
     </section>
 
-    <!-- Boutons alignés côte à côte -->
     <div class="btn-container">
       <a href="https://docs.google.com/presentation/d/1EcXekD9tkcNS4-WJMPIoCq9BJ0h_CwV2/export/pptx" 
          class="btn" 
@@ -154,34 +144,29 @@
   </footer>
 
   <script>
-    // URL de la Google Sheet publiée au format CSV (remplace par ton URL)
     const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-KR8PI-1On28uGKj4XJUlLQtatzEJC9pDtSXy6NSAmb4mJi_8Ygjr6PcW7w_5GbWBy42OmCKfp8lX/pub?output=csv";
 
-    // Fonction pour charger les données depuis la Google Sheet
     async function loadRooms() {
       try {
         const response = await fetch(sheetURL);
         const data = await response.text();
-        
-        // Transformation des données CSV en tableau
-        const rows = data.split("\n").slice(1); // On ignore l'en-tête
+        const rows = data.split("\n").slice(1);
         const roomList = document.getElementById("room-list");
 
         rows.forEach(row => {
           const [roomNumber, availability] = row.split(",");
+          let price = (roomNumber.trim() === "4" || roomNumber.trim() === "5" || roomNumber.trim() === "6") ? "720 €" : "760 €";
 
-          // Création de la classe de disponibilité
           let availabilityClass = "";
           if (availability.trim() === "Disponible") availabilityClass = "available";
           else if (availability.trim() === "Réservée") availabilityClass = "reserved";
           else if (availability.trim() === "En cours de réservation") availabilityClass = "pending";
 
-          // Création de l'encadré de chambre
           const roomDiv = document.createElement("div");
           roomDiv.className = "room";
           roomDiv.innerHTML = `
             <h3>Chambre ${roomNumber}</h3>
-            <p><strong>Prix :</strong> 760 €/mois</p>
+            <p><strong>Prix :</strong> ${price}/mois</p>
             <span class="availability ${availabilityClass}">${availability.trim()}</span>
           `;
 
@@ -192,7 +177,6 @@
       }
     }
 
-    // Charger les chambres au démarrage
     loadRooms();
   </script>
 </body>
