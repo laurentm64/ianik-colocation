@@ -905,7 +905,7 @@
   <div class="hero-content">
     <div class="hero-eyebrow">📍 Bayonne, Pays Basque</div>
     <h1 class="hero-title">Maison <em>Ianik</em></h1>
-    <p class="hero-sub">Colocation premium dans une villa d'exception — 9 chambres meublées, charges incluses, à deux pas du centre de Bayonne.</p>
+    <p class="hero-sub">Colocation premium dans une villa d'exception — 9 chambres meublées, charges incluses, à deux pas du centre de Bayonne et cinq minutes à pied de l'hôpital de Bayonne.</p>
     <div class="hero-actions">
       <a href="#chambres" class="btn-primary">Voir les chambres disponibles</a>
       <a href="#maison" class="btn-outline">Découvrir la maison</a>
@@ -1086,7 +1086,7 @@
         <div class="contact-icon">👤</div>
         <div>
           <div class="contact-label">Propriétaire</div>
-          <div class="contact-value">Laurent Mascle</div>
+          <div class="contact-value">Laurent Mascle et Xavier Deloux</div>
         </div>
       </div>
       <div class="contact-item">
@@ -1346,7 +1346,6 @@
           </div>
           <div class="room-details">
             <span class="room-detail-item">🚿 ${room.sde}</span>
-            ${room.couples ? '<span class="room-detail-item">💑 Couples OK</span>' : ''}
           </div>
           <div class="room-footer">
             <div class="room-price">${room.price}€ <span>/ mois CC</span></div>
@@ -1387,8 +1386,7 @@
     tags.innerHTML = [
       `📍 ${room.floor}`,
       `🚿 ${room.sde}`,
-      ...(room.couples ? ["💑 Couples acceptés (+50€/mois)"] : []),
-      ...room.extras
+...room.extras
     ].map(t => `<span class="modal-tag">${t}</span>`).join("");
 
     // Warning
