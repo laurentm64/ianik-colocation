@@ -3,181 +3,1467 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ianik - Maison de colocation</title>
+  <title>Maison Ianik — Colocation à Bayonne</title>
+  <meta name="description" content="Colocation premium à Bayonne. 9 chambres meublées avec charges incluses dans une maison d'exception.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* Styles généraux */
+    /* ===================== VARIABLES & RESET ===================== */
+    :root {
+      --dark:       #111111;
+      --dark-2:     #1c1c1c;
+      --cream:      #f6f2eb;
+      --cream-dark: #ede8de;
+      --gold:       #b8913a;
+      --gold-light: #d4aa55;
+      --gold-pale:  #f0e2c0;
+      --text:       #1e1e1e;
+      --text-muted: #666;
+      --border:     #ddd8ce;
+      --white:      #ffffff;
+      --available:  #16a34a;
+      --unavailable:#c0392b;
+      --radius:     12px;
+      --radius-lg:  20px;
+      --shadow:     0 4px 24px rgba(0,0,0,0.08);
+      --shadow-lg:  0 16px 60px rgba(0,0,0,0.15);
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      overflow-x: hidden;
       line-height: 1.6;
-      margin: 0;
-      padding: 0;
-      background-color: #f0f8ff; /* Bleu clair */
-      color: #333;
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+    /* ===================== SCROLLBAR ===================== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--cream-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+    /* ===================== NAV ===================== */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 72px;
+      background: rgba(17,17,17,0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(184,145,58,0.2);
+      transition: all 0.3s;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--white);
+      letter-spacing: 0.05em;
+    }
+    .nav-logo span { color: var(--gold-light); }
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.82rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-cta {
+      padding: 9px 22px;
+      background: var(--gold);
+      color: var(--white);
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 40px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .nav-burger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: all 0.3s; }
+
+    /* ===================== HERO ===================== */
+    #hero {
+      position: relative;
+      height: 100vh; min-height: 600px;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background-image: url('images/salon_vue_6.jpg');
+      background-size: cover;
+      background-position: center 40%;
+      transform: scale(1.05);
+      transition: transform 8s ease;
+    }
+    #hero.loaded .hero-bg { transform: scale(1); }
+    .hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(10,10,10,0.55) 0%,
+        rgba(10,10,10,0.45) 50%,
+        rgba(10,10,10,0.75) 100%);
+    }
+    .hero-content {
+      position: relative; z-index: 2;
+      text-align: center; padding: 0 5%;
+      animation: fadeUp 1.2s ease both;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 1.2rem;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 8vw, 7rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 1.2rem;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    .hero-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 2.4rem;
+      max-width: 480px; margin-inline: auto;
+    }
+    .hero-actions {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    }
+    .btn-primary {
+      padding: 14px 34px;
+      background: var(--gold);
+      color: var(--white);
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border-radius: 50px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(184,145,58,0.4);
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(184,145,58,0.5); }
+    .btn-outline {
+      padding: 14px 34px;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      color: var(--white);
+      font-size: 0.88rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 50px;
+      backdrop-filter: blur(4px);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--gold-light); background: rgba(184,145,58,0.15); }
+    .hero-scroll {
+      position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      animation: bounce 2s infinite;
+    }
+    .hero-scroll::after {
+      content: '';
+      display: block; width: 1px; height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
     }
 
-    header {
-      text-align: center;
-      padding: 2rem;
-      background-color: #0073cf; /* Bleu Aviron Bayonnais */
-      color: white;
+    /* ===================== SECTIONS ===================== */
+    section { padding: 6rem 5%; }
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4vw, 3.4rem);
+      font-weight: 400;
+      line-height: 1.15;
+      color: var(--dark);
+      margin-bottom: 1.2rem;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-intro {
+      max-width: 600px;
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.75;
     }
 
-    h1, h2 {
-      margin: 0;
+    /* ===================== MAISON ===================== */
+    #maison {
+      background: var(--dark-2);
+      color: var(--white);
     }
-
-    main {
-      padding: 2rem;
-    }
-
-    section {
-      margin-bottom: 2rem;
-    }
-
-    .rooms .room-list {
+    #maison .section-title { color: var(--white); }
+    #maison .section-intro { color: rgba(255,255,255,0.6); }
+    .maison-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+      margin-top: 3.5rem;
+    }
+    .maison-photos {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 200px 200px;
+      gap: 12px;
+    }
+    .maison-photo {
+      overflow: hidden; border-radius: var(--radius);
+      position: relative;
+    }
+    .maison-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .maison-photo:hover img { transform: scale(1.06); }
+    .maison-photo.tall {
+      grid-row: span 2;
+    }
+    .maison-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-top: 2.5rem;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.4rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+      margin-top: 4px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ===================== CHARGES INCLUSES ===================== */
+    #charges {
+      background: var(--cream);
+    }
+    .charges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+    }
+    .charge-item {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .charge-item:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .charge-icon {
+      width: 40px; height: 40px;
+      background: var(--gold-pale);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem;
+    }
+    .charge-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .charges-note {
+      margin-top: 1.5rem;
+      padding: 1rem 1.4rem;
+      background: var(--gold-pale);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      max-width: 640px;
+    }
+
+    /* ===================== CHAMBRES ===================== */
+    #chambres {
+      background: var(--white);
+    }
+    .chambres-header {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .availability-legend {
+      display: flex; gap: 1.5rem; align-items: center;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .legend-dot.available { background: var(--available); }
+    .legend-dot.unavailable { background: var(--unavailable); }
+    #availability-status {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* Floor tabs */
+    .floor-tabs {
+      display: flex; gap: 0.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .floor-tab {
+      padding: 8px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--white);
+    }
+    .floor-tab:hover { border-color: var(--gold); color: var(--gold); }
+    .floor-tab.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--white);
+    }
+
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.4rem;
+    }
+    .room-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+      position: relative;
+    }
+    .room-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .room-card.unavailable { opacity: 0.72; }
+    .room-card[data-floor="hidden"] { display: none; }
+
+    .room-photo {
+      position: relative;
+      height: 210px;
+      overflow: hidden;
+    }
+    .room-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .room-card:hover .room-photo img { transform: scale(1.05); }
+    .room-badge {
+      position: absolute;
+      top: 12px; right: 12px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .room-badge.available {
+      background: rgba(22,163,74,0.92);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(22,163,74,0.3);
+    }
+    .room-badge.unavailable {
+      background: rgba(192,57,43,0.88);
+      color: var(--white);
+    }
+    .room-badge.loading {
+      background: rgba(100,100,100,0.7);
+      color: var(--white);
+    }
+    .room-floor-tag {
+      position: absolute;
+      bottom: 10px; left: 12px;
+      padding: 4px 10px;
+      background: rgba(17,17,17,0.75);
+      backdrop-filter: blur(4px);
+      color: var(--white);
+      font-size: 0.7rem;
+      font-weight: 500;
+      border-radius: 20px;
+    }
+    .room-info {
+      padding: 1.2rem 1.4rem;
+    }
+    .room-number-name {
+      display: flex; align-items: baseline; gap: 0.6rem;
+      margin-bottom: 0.5rem;
+    }
+    .room-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    .room-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .room-details {
+      display: flex; gap: 1rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    .room-detail-item {
+      display: flex; align-items: center; gap: 4px;
+    }
+    .room-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .room-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .room-price span {
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .room-btn {
+      padding: 9px 20px;
+      background: var(--gold);
+      color: var(--white);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 30px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .room-btn:hover { background: var(--gold-light); transform: scale(1.03); }
+    .room-btn.disabled {
+      background: var(--border);
+      color: var(--text-muted);
+      cursor: not-allowed;
+    }
+    .room-btn.disabled:hover { background: var(--border); transform: none; }
+
+    /* ===================== GALERIE PARTIES COMMUNES ===================== */
+    #galerie {
+      background: var(--cream-dark);
+      padding: 5rem 5%;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 220px 220px;
+      gap: 12px;
+      margin-top: 2.5rem;
+    }
+    .gallery-item {
+      overflow: hidden;
+      border-radius: var(--radius);
+      position: relative;
+    }
+    .gallery-item:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.06); }
+    .gallery-caption {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 0.8rem 1rem 0.7rem;
+      background: linear-gradient(to top, rgba(0,0,0,0.65), transparent);
+      color: var(--white);
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .gallery-item:hover .gallery-caption { opacity: 1; transform: translateY(0); }
+
+    /* ===================== PROCESSUS ===================== */
+    #processus {
+      background: var(--dark-2);
+      color: var(--white);
+    }
+    #processus .section-title { color: var(--white); }
+    #processus .section-intro { color: rgba(255,255,255,0.6); }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .step-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s;
+    }
+    .step-card:hover { background: rgba(255,255,255,0.08); }
+    .step-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 4rem;
+      font-weight: 300;
+      color: rgba(184,145,58,0.25);
+      line-height: 1;
+      position: absolute;
+      top: 0.8rem; right: 1.2rem;
+    }
+    .step-icon {
+      width: 44px; height: 44px;
+      background: rgba(184,145,58,0.15);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    .step-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .step-text {
+      font-size: 0.82rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.6;
+    }
+    .acompte-notice {
+      margin-top: 2.5rem;
+      padding: 1.2rem 1.6rem;
+      background: rgba(184,145,58,0.12);
+      border: 1px solid rgba(184,145,58,0.3);
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.75);
+      max-width: 680px;
+    }
+    .acompte-notice strong { color: var(--gold-light); }
+
+    /* ===================== CONTACT ===================== */
+    #contact {
+      background: var(--cream);
+    }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+      margin-top: 3rem;
+    }
+    .contact-info { }
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .contact-item:last-child { border-bottom: none; }
+    .contact-icon {
+      width: 42px; height: 42px;
+      background: var(--gold-pale);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .contact-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 3px;
+    }
+    .contact-value {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--dark);
+    }
+    .contact-map {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      height: 360px;
+      box-shadow: var(--shadow);
+    }
+    .contact-map iframe {
+      width: 100%; height: 100%; border: 0;
+    }
+
+    /* ===================== FOOTER ===================== */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.5);
+      padding: 2rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
       gap: 1rem;
     }
-
-    .room {
-      border: 2px solid #0073cf;
-      padding: 1rem;
-      background-color: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    .footer-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--white);
     }
+    .footer-brand span { color: var(--gold-light); }
+    footer p { font-size: 0.78rem; }
 
-    .room h3 {
-      margin-top: 0;
-      color: #0073cf;
+    /* ===================== MODAL ===================== */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,10,10,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
     }
-
-    .availability {
-      display: inline-block;
-      padding: 0.3rem 0.6rem;
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      max-width: 760px; width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: translateY(20px) scale(0.98);
+      transition: transform 0.3s;
+      position: relative;
+    }
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+    .modal-close {
+      position: absolute;
+      top: 1.2rem; right: 1.2rem;
+      width: 36px; height: 36px;
+      background: rgba(0,0,0,0.08);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s;
+      z-index: 10;
+    }
+    .modal-close:hover { background: rgba(0,0,0,0.15); }
+    .modal-photo {
+      height: 280px;
+      overflow: hidden;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+    .modal-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .modal-body { padding: 2rem 2.2rem 2.2rem; }
+    .modal-top {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin-bottom: 1rem;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .modal-room-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+    }
+    .modal-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+    .modal-price span {
       font-size: 0.9rem;
-      font-weight: bold;
-      border-radius: 5px;
-      color: white;
+      font-weight: 400;
+      color: var(--text-muted);
+      font-family: 'Plus Jakarta Sans', sans-serif;
     }
-
-    .available {
-      background-color: #4caf50; /* Vert */
+    .modal-tags {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+      margin-bottom: 1.4rem;
     }
-
-    .reserved {
-      background-color: #f44336; /* Rouge */
+    .modal-tag {
+      padding: 5px 12px;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-muted);
     }
-
-    .pending {
-      background-color: #ffc107; /* Jaune */
-      color: black;
+    .modal-divider { height: 1px; background: var(--border); margin: 1.4rem 0; }
+    .modal-charges-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
     }
-
-    .btn-container {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 2rem;
+    .modal-charges-list {
+      display: flex; flex-wrap: wrap; gap: 0.5rem;
+      margin-bottom: 1.4rem;
     }
-
-    .btn {
-      display: inline-block;
-      width: 300px;
-      padding: 1rem;
+    .modal-charge-tag {
+      padding: 4px 10px;
+      background: var(--gold-pale);
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: var(--text);
+    }
+    .modal-warning {
+      padding: 0.9rem 1.2rem;
+      background: #fff8ed;
+      border: 1px solid #f0c97a;
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      color: #7a5000;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .modal-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .modal-btn-stripe {
+      flex: 1;
+      padding: 14px 24px;
+      background: var(--gold);
+      color: var(--white);
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      border-radius: 50px;
       text-align: center;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: white;
-      background-color: #0073cf;
-      text-decoration: none;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(184,145,58,0.35);
+      display: block;
+    }
+    .modal-btn-stripe:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(184,145,58,0.45); }
+    .modal-btn-stripe.disabled {
+      background: var(--border);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .modal-btn-stripe.disabled:hover { background: var(--border); transform: none; }
+
+    /* ===================== ANIMATIONS ===================== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(6px); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===================== RESPONSIVE ===================== */
+    @media (max-width: 900px) {
+      .maison-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      .gallery-item:first-child { grid-column: span 2; }
+      nav .nav-links, nav .nav-cta { display: none; }
+      .nav-burger { display: flex; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 4rem 5%; }
+      .gallery-grid { grid-template-columns: 1fr 1fr; }
+      .rooms-grid { grid-template-columns: 1fr; }
+      .modal-body { padding: 1.5rem; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .maison-photos { grid-template-rows: 160px 160px; }
     }
 
-    .btn:hover {
-      background-color: #005fa3;
+    /* Mobile nav menu */
+    .mobile-menu {
+      display: none;
+      position: fixed; top: 72px; left: 0; right: 0;
+      background: rgba(17,17,17,0.97);
+      z-index: 99;
+      padding: 1.5rem 5%;
+      flex-direction: column;
+      gap: 1.2rem;
     }
-
-    footer {
-      text-align: center;
-      padding: 1rem;
-      background-color: #0073cf;
-      color: white;
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: rgba(255,255,255,0.8);
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
+    .mobile-menu a:last-child { border: none; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Bienvenue à la coloc ianik</h1>
-    <p>Découvrez nos 9 chambres confortables dans une maison chaleureuse située à Bayonne.</p>
-  </header>
 
-  <main>
-    <section class="rooms">
-      <h2>Nos chambres</h2>
-      <div class="room-list" id="room-list">
-        <!-- Les chambres seront ajoutées ici via JavaScript -->
-      </div>
-    </section>
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="nav-logo">Maison <span>Ianik</span></a>
+  <ul class="nav-links">
+    <li><a href="#maison">La maison</a></li>
+    <li><a href="#chambres">Chambres</a></li>
+    <li><a href="#charges">Charges</a></li>
+    <li><a href="#processus">Réservation</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#chambres" class="nav-cta">Voir les chambres</a>
+  <div class="nav-burger" id="burgerBtn" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
 
-    <div class="btn-container">
-      <a href="https://docs.google.com/presentation/d/1EcXekD9tkcNS4-WJMPIoCq9BJ0h_CwV2/export/pptx" 
-         class="btn" 
-         download>
-         Processus de réservation (PPTX)
-      </a>
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#maison" onclick="toggleMenu()">La maison</a>
+  <a href="#chambres" onclick="toggleMenu()">Les chambres</a>
+  <a href="#charges" onclick="toggleMenu()">Charges incluses</a>
+  <a href="#processus" onclick="toggleMenu()">Processus de réservation</a>
+  <a href="#contact" onclick="toggleMenu()">Contact</a>
+</div>
 
-      <a href="https://forms.gle/2QNtsqBd7qiMW8mPA" 
-         class="btn" 
-         target="_blank">
-         Je veux postuler pour une chambre
-      </a>
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">📍 Bayonne, Pays Basque</div>
+    <h1 class="hero-title">Maison <em>Ianik</em></h1>
+    <p class="hero-sub">Colocation premium dans une villa d'exception — 9 chambres meublées, charges incluses, à deux pas du centre de Bayonne.</p>
+    <div class="hero-actions">
+      <a href="#chambres" class="btn-primary">Voir les chambres disponibles</a>
+      <a href="#maison" class="btn-outline">Découvrir la maison</a>
     </div>
-  </main>
+  </div>
+  <div class="hero-scroll">Découvrir</div>
+</section>
 
-  <footer>
-    <p>&copy; 2025 Ianik - Maison de colocation à Bayonne</p>
-  </footer>
+<!-- LA MAISON -->
+<section id="maison">
+  <div class="reveal">
+    <p class="section-label">La maison</p>
+    <h2 class="section-title">Une villa d'exception<br><em>au cœur de Bayonne</em></h2>
+    <p class="section-intro">Maison Ianik, c'est une grande villa lumineuse au design soigné, rénovée avec soin pour offrir un cadre de vie exceptionnel à ses colocataires. Salon spacieux, cuisine équipée, jardin, terrasses — tout est pensé pour que vous vous sentiez chez vous.</p>
+  </div>
+  <div class="maison-grid reveal">
+    <div>
+      <div class="maison-stats">
+        <div class="stat-card">
+          <div class="stat-num">9</div>
+          <div class="stat-label">Chambres meublées</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Niveaux</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">200€</div>
+          <div class="stat-label">Charges forfaitaires / mois</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">Bayonne</div>
+          <div class="stat-label">16 rue de Lasseguette</div>
+        </div>
+      </div>
+    </div>
+    <div class="maison-photos">
+      <div class="maison-photo tall">
+        <img src="images/salon_vue_5.jpg" alt="Salon Ianik" loading="lazy">
+      </div>
+      <div class="maison-photo">
+        <img src="images/cuisine.jpg" alt="Cuisine" loading="lazy">
+      </div>
+      <div class="maison-photo">
+        <img src="images/jardin.jpg" alt="Jardin" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
 
-  <script>
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-KR8PI-1On28uGKj4XJUlLQtatzEJC9pDtSXy6NSAmb4mJi_8Ygjr6PcW7w_5GbWBy42OmCKfp8lX/pub?output=csv";
+<!-- CHARGES INCLUSES -->
+<section id="charges">
+  <div class="reveal">
+    <p class="section-label">Forfait tout compris</p>
+    <h2 class="section-title">200€ de charges<br><em>tout est inclus</em></h2>
+    <p class="section-intro">Aucune mauvaise surprise : un forfait mensuel fixe couvre l'intégralité des charges courantes.</p>
+  </div>
+  <div class="charges-grid reveal">
+    <div class="charge-item"><div class="charge-icon">💧</div><div class="charge-name">Eau</div></div>
+    <div class="charge-item"><div class="charge-icon">⚡</div><div class="charge-name">Électricité</div></div>
+    <div class="charge-item"><div class="charge-icon">🔥</div><div class="charge-name">Chauffage</div></div>
+    <div class="charge-item"><div class="charge-icon">📶</div><div class="charge-name">Internet fibre (Freebox)</div></div>
+    <div class="charge-item"><div class="charge-icon">🎬</div><div class="charge-name">Netflix</div></div>
+    <div class="charge-item"><div class="charge-icon">🧹</div><div class="charge-name">Ménage communs ×1/sem.</div></div>
+    <div class="charge-item"><div class="charge-icon">🌿</div><div class="charge-name">Entretien jardin</div></div>
+    <div class="charge-item"><div class="charge-icon">🏡</div><div class="charge-name">Assurance habitation</div></div>
+  </div>
+  <p class="charges-note reveal">
+    💑 Les chambres avec salle d'eau privative sont disponibles pour les couples.<br>
+    Un supplément de <strong>50€/mois</strong> sur les charges sera appliqué.
+  </p>
+</section>
 
-    async function loadRooms() {
-      try {
-        const response = await fetch(sheetURL);
-        const data = await response.text();
-        const rows = data.split("\n").slice(1);
-        const roomList = document.getElementById("room-list");
+<!-- CHAMBRES -->
+<section id="chambres">
+  <div class="chambres-header reveal">
+    <div>
+      <p class="section-label">Nos chambres</p>
+      <h2 class="section-title">Chaque chambre,<br><em>une atmosphère unique</em></h2>
+      <p id="availability-status">Chargement de la disponibilité…</p>
+    </div>
+    <div class="availability-legend">
+      <div class="legend-item"><div class="legend-dot available"></div> Disponible</div>
+      <div class="legend-item"><div class="legend-dot unavailable"></div> Occupée</div>
+    </div>
+  </div>
 
-        rows.forEach(row => {
-          const [roomNumber, availability] = row.split(",");
-          let price = (roomNumber.trim() === "4" || roomNumber.trim() === "5" || roomNumber.trim() === "6") ? "720 €" : "760 €";
+  <div class="floor-tabs reveal">
+    <button class="floor-tab active" data-floor="all">Toutes (9)</button>
+    <button class="floor-tab" data-floor="Rez de Jardin">Rez de Jardin</button>
+    <button class="floor-tab" data-floor="Rez-de-chaussée">Rez-de-chaussée</button>
+    <button class="floor-tab" data-floor="1er étage">1er étage</button>
+  </div>
 
-          let availabilityClass = "";
-          if (availability.trim() === "Disponible") availabilityClass = "available";
-          else if (availability.trim() === "Réservée") availabilityClass = "reserved";
-          else if (availability.trim() === "En cours de réservation") availabilityClass = "pending";
+  <div class="rooms-grid reveal" id="roomsGrid">
+    <!-- Injected by JS -->
+  </div>
+</section>
 
-          const roomDiv = document.createElement("div");
-          roomDiv.className = "room";
-          roomDiv.innerHTML = `
-            <h3>Chambre ${roomNumber}</h3>
-            <p><strong>Prix :</strong> ${price}/mois</p>
-            <span class="availability ${availabilityClass}">${availability.trim()}</span>
-          `;
+<!-- GALERIE PARTIES COMMUNES -->
+<section id="galerie">
+  <div class="reveal">
+    <p class="section-label">Espaces communs</p>
+    <h2 class="section-title">Des espaces partagés<br><em>qui font la différence</em></h2>
+  </div>
+  <div class="gallery-grid reveal">
+    <div class="gallery-item">
+      <img src="images/salon_vue_4.jpg" alt="Salon principal" loading="lazy">
+      <div class="gallery-caption">Salon principal</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/salon_vue_3.jpg" alt="Salle à manger" loading="lazy">
+      <div class="gallery-caption">Salle à manger</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/cuisine.jpg" alt="Cuisine équipée" loading="lazy">
+      <div class="gallery-caption">Cuisine équipée</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/jardin.jpg" alt="Jardin" loading="lazy">
+      <div class="gallery-caption">Jardin & terrasse</div>
+    </div>
+    <div class="gallery-item">
+      <img src="images/salon_vue_6.jpg" alt="Vue salon" loading="lazy">
+      <div class="gallery-caption">Vue d'ensemble</div>
+    </div>
+  </div>
+</section>
 
-          roomList.appendChild(roomDiv);
-        });
-      } catch (error) {
-        console.error("Erreur lors du chargement des chambres :", error);
-      }
+<!-- PROCESSUS -->
+<section id="processus">
+  <div class="reveal">
+    <p class="section-label">Comment ça marche</p>
+    <h2 class="section-title">Réserver votre chambre<br><em>en 4 étapes simples</em></h2>
+    <p class="section-intro">Un parcours entièrement en ligne, du choix de votre chambre jusqu'à la confirmation.</p>
+  </div>
+  <div class="steps-grid reveal">
+    <div class="step-card">
+      <div class="step-num">01</div>
+      <div class="step-icon">🔍</div>
+      <div class="step-title">Choisissez votre chambre</div>
+      <div class="step-text">Parcourez les chambres disponibles, consultez les photos et les détails. Cliquez sur "Réserver" pour la chambre qui vous correspond.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">02</div>
+      <div class="step-icon">💳</div>
+      <div class="step-title">Payez l'acompte en ligne</div>
+      <div class="step-text">Un acompte sécurisé de <strong>250€</strong> via Stripe valide votre réservation. La chambre est immédiatement marquée comme réservée.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">03</div>
+      <div class="step-icon">📋</div>
+      <div class="step-title">Complétez votre dossier</div>
+      <div class="step-text">Vous recevrez par email un formulaire à remplir avec les informations nécessaires à la rédaction du bail.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">04</div>
+      <div class="step-icon">🗝️</div>
+      <div class="step-title">Prenez les clés</div>
+      <div class="step-text">Contactez Laurent 2 semaines avant votre arrivée pour organiser votre entrée dans les lieux. L'acompte est déduit de votre 1er loyer.</div>
+    </div>
+  </div>
+  <div class="acompte-notice reveal">
+    ℹ️ <strong>Acompte non remboursable :</strong> L'acompte de 250€ constitue une avance sur le 1er mois de loyer.
+    En cas de désistement, il sera intégralement conservé. Cette mesure nous permet de garantir la disponibilité de la chambre jusqu'à votre arrivée.
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <p class="section-label">Contact</p>
+    <h2 class="section-title">Une question ?<br><em>Parlons-en</em></h2>
+  </div>
+  <div class="contact-grid reveal">
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="contact-icon">👤</div>
+        <div>
+          <div class="contact-label">Propriétaire</div>
+          <div class="contact-value">Laurent Mascle</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📞</div>
+        <div>
+          <div class="contact-label">Téléphone</div>
+          <div class="contact-value"><a href="tel:0617260218">06 17 26 02 18</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">✉️</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value"><a href="mailto:16ruelasseguette@gmail.com">16ruelasseguette@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Adresse</div>
+          <div class="contact-value">16 rue de Lasseguette<br>64100 Bayonne</div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-map">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2916.9!2d-1.481!3d43.493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s16+Rue+de+Lasseguette%2C+64100+Bayonne!5e0!3m2!1sfr!2sfr!4v1"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Localisation Maison Ianik">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Maison <span>Ianik</span></div>
+  <p>16 rue de Lasseguette · 64100 Bayonne</p>
+  <p>© 2025 Ianik — Tous droits réservés</p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="roomModal" onclick="handleModalClick(event)">
+  <div class="modal" id="modalContent">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-photo">
+      <img id="modalImg" src="" alt="">
+    </div>
+    <div class="modal-body">
+      <div class="modal-top">
+        <h3 class="modal-room-title" id="modalTitle"></h3>
+        <div class="modal-price" id="modalPrice"></div>
+      </div>
+      <div class="modal-tags" id="modalTags"></div>
+      <div class="modal-divider"></div>
+      <div class="modal-charges-title">Charges incluses (200€/mois)</div>
+      <div class="modal-charges-list">
+        <span class="modal-charge-tag">💧 Eau</span>
+        <span class="modal-charge-tag">⚡ Électricité</span>
+        <span class="modal-charge-tag">🔥 Chauffage</span>
+        <span class="modal-charge-tag">📶 Internet fibre</span>
+        <span class="modal-charge-tag">🎬 Netflix</span>
+        <span class="modal-charge-tag">🧹 Ménage communs</span>
+        <span class="modal-charge-tag">🌿 Entretien jardin</span>
+        <span class="modal-charge-tag">🏡 Assurance</span>
+      </div>
+      <div class="modal-warning" id="modalWarning"></div>
+      <div class="modal-actions">
+        <a href="#" class="modal-btn-stripe" id="modalStripeBtn" target="_blank" rel="noopener">
+          💳 &nbsp;Réserver — Payer l'acompte de 250€
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     DONNÉES DES CHAMBRES
+     ➜ Remplacer chaque stripeLink par l'URL Stripe réelle
+     ============================================================ */
+  const ROOMS = [
+    {
+      id: 1,
+      name: "La Verte",
+      floor: "Rez de Jardin",
+      price: 760,
+      sde: "Salle d'eau privative",
+      couples: true,
+      image: "images/chambre_1.jpg",
+      stripeLink: "https://buy.stripe.com/REMPLACER_LIEN_CHAMBRE_1",
+      extras: ["Grande chambre", "Parquet clair", "Placards intégrés"]
+    },
+    {
+      id: 2,
+      name: "La Bleue",
+      floor: "Rez de Jardin",
+      price: 760,
+      sde: "Salle d'eau privative",
+      couples: true,
+      image: "images/chambre_2.jpg",
+      stripeLink: "https://buy.stripe.com/REMPLACER_LIEN_CHAMBRE_2",
+      extras: ["Papier peint géométrique", "Bureau inclus", "Parquet gris"]
+    },
+    {
+      id: 3,
+      name: "L'Ocre",
+      floor: "Rez de Jardin",
+      price: 760,
+      sde: "Salle d'eau partagée (ch. 3 & 4)",
+      couples: false,
+      image: "images/chambre_3.jpg",
+      stripeLink: "https://buy.stripe.com/REMPLACER_LIEN_CHAMBRE_3",
+      extras: ["Rideaux dorés", "Luminosité naturelle", "Dressing"]
+    },
+    {
+      id: 4,
+      name: "La Musicale",
+      floor: "Rez de Jardin",
+      price: 720,
+      sde: "Salle d'eau partagée (ch. 3 & 4)",
+      couples: false,
+      image: "images/chambre_4.jpg",
+      stripeLink: "https://buy.stripe.com/REMPLACER_LIEN_CHAMBRE_4",
+      extras: ["Ambiance chaleureuse", "Bureau et chaise", "Fenêtre jardin"]
+    },
+    {
+      id: 5,
+      name: "La Tropicale",
+      floor: "Rez-de-chaussée",
+      price: 720,
+      sde: "Salle d'eau partagée (ch. 5 & 6)",
+      couples: false,
+      image: "images/chambre_5.jpg",
+      stripeLink: "https://buy.stripe.com/REMPLACER_LIEN_CHAMBRE_5",
+      extras: ["Papier peint tropical", "Parquet sombre", "Bureau inclus"]
+    },
+    {
+      id: 6,
+      name: "La Marine",
+      floor: "Rez-de-chaussée",
+      price: 720,
+      sde: "Salle d'eau partagée (ch. 5 & 6)",
+      couples: false,
+      image: "images/chambre_6.jpg",
+      stripeLink: "https://buy.stripe.com/REMPLACER_LIEN_CHAMBRE_6",
+      extras: ["Mur bleu marine", "Grande fenêtre", "Bureau & siège design"]
+    },
+    {
+      id: 7,
+      name: "L'Art Déco",
+      floor: "1er étage",
+      price: 760,
+      sde: "Salle d'eau privative",
+      couples: true,
+      image: "images/chambre_7.jpg",
+      stripeLink: "https://buy.stripe.com/REMPLACER_LIEN_CHAMBRE_7",
+      extras: ["Papier peint art déco doré", "Parquet clair", "Très lumineuse"]
+    },
+    {
+      id: 8,
+      name: "La Lumineuse",
+      floor: "1er étage",
+      price: 760,
+      sde: "Salle d'eau privative",
+      couples: true,
+      image: "images/chambre_8.jpg",
+      stripeLink: "https://buy.stripe.com/REMPLACER_LIEN_CHAMBRE_8",
+      extras: ["Velux + grandes fenêtres", "Poutres turquoise", "Très grande surface"]
+    },
+    {
+      id: 9,
+      name: "Le Jardin",
+      floor: "Rez de Jardin",
+      price: 760,
+      sde: "Salle d'eau privative",
+      couples: true,
+      image: "images/chambre_9.jpg",
+      stripeLink: "https://buy.stripe.com/REMPLACER_LIEN_CHAMBRE_9",
+      extras: ["Accès terrasse/jardin", "Baies vitrées", "Vue sur parc"]
+    }
+  ];
+
+  /* ============================================================
+     GOOGLE SHEETS — DISPONIBILITÉS
+     ID du sheet: 1sHIayNCHRl1pa20suzm2R1JotMCpSUWOr5CQ2wR5Fgw
+     ➜ Le sheet doit être publié (Fichier > Partager > Publier sur le web > CSV)
+     ============================================================ */
+  const SHEET_ID = "1sHIayNCHRl1pa20suzm2R1JotMCpSUWOr5CQ2wR5Fgw";
+  const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?output=csv`;
+
+  let availability = {}; // { 1: "Disponible", 2: "Réservée", ... }
+
+  async function fetchAvailability() {
+    try {
+      const res = await fetch(SHEET_URL, { cache: "no-cache" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const text = await res.text();
+      const lines = text.trim().split("\n").slice(1); // skip header
+      lines.forEach(line => {
+        const parts = line.split(",");
+        if (parts.length >= 2) {
+          const num = parseInt(parts[0].trim());
+          const status = parts[1].trim().replace(/"/g, "").replace(/\r/g, "");
+          if (!isNaN(num)) availability[num] = status;
+        }
+      });
+      document.getElementById("availability-status").textContent =
+        "Disponibilités mises à jour en temps réel · " + new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+    } catch (e) {
+      console.warn("Impossible de charger les disponibilités :", e);
+      document.getElementById("availability-status").textContent =
+        "Disponibilité — contactez-nous pour confirmer";
+      // Fallback: all rooms show as loading
+      ROOMS.forEach(r => availability[r.id] = "Inconnu");
+    }
+    renderRooms();
+  }
+
+  /* ============================================================
+     RENDU DES CARTES CHAMBRES
+     ============================================================ */
+  function isAvailable(roomId) {
+    const s = (availability[roomId] || "").toLowerCase();
+    return s.includes("dispo") || s === "";
+  }
+
+  function renderRooms(filterFloor = "all") {
+    const grid = document.getElementById("roomsGrid");
+    grid.innerHTML = "";
+
+    ROOMS.forEach(room => {
+      const avail = isAvailable(room.id);
+      const statusText = availability[room.id] || "…";
+      const hide = filterFloor !== "all" && room.floor !== filterFloor;
+
+      const card = document.createElement("div");
+      card.className = `room-card${avail ? "" : " unavailable"}`;
+      card.dataset.floor = hide ? "hidden" : room.floor;
+      if (avail) card.addEventListener("click", () => openModal(room));
+
+      let badgeClass = avail ? "available" : "unavailable";
+      let badgeText = avail ? "Disponible" : "Occupée";
+      if (!availability[room.id]) { badgeClass = "loading"; badgeText = "…"; }
+
+      card.innerHTML = `
+        <div class="room-photo">
+          <img src="${room.image}" alt="Chambre ${room.id}" loading="lazy">
+          <div class="room-badge ${badgeClass}">${badgeText}</div>
+          <div class="room-floor-tag">${room.floor}</div>
+        </div>
+        <div class="room-info">
+          <div class="room-number-name">
+            <span class="room-number">N°${room.id}</span>
+            <span class="room-name">${room.name}</span>
+          </div>
+          <div class="room-details">
+            <span class="room-detail-item">🚿 ${room.sde}</span>
+            ${room.couples ? '<span class="room-detail-item">💑 Couples OK</span>' : ''}
+          </div>
+          <div class="room-footer">
+            <div class="room-price">${room.price}€ <span>/ mois CC</span></div>
+            <button class="room-btn${avail ? "" : " disabled"}">
+              ${avail ? "Réserver" : "Occupée"}
+            </button>
+          </div>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  /* ============================================================
+     FILTRES PAR ÉTAGE
+     ============================================================ */
+  document.querySelectorAll(".floor-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.querySelectorAll(".floor-tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      const floor = tab.dataset.floor;
+      renderRooms(floor);
+    });
+  });
+
+  /* ============================================================
+     MODAL
+     ============================================================ */
+  function openModal(room) {
+    const avail = isAvailable(room.id);
+    document.getElementById("modalImg").src = room.image;
+    document.getElementById("modalImg").alt = room.name;
+    document.getElementById("modalTitle").textContent = `Ch. ${room.id} — ${room.name}`;
+    document.getElementById("modalPrice").innerHTML = `${room.price}€ <span>/ mois CC</span>`;
+
+    // Tags
+    const tags = document.getElementById("modalTags");
+    tags.innerHTML = [
+      `📍 ${room.floor}`,
+      `🚿 ${room.sde}`,
+      ...(room.couples ? ["💑 Couples acceptés (+50€/mois)"] : []),
+      ...room.extras
+    ].map(t => `<span class="modal-tag">${t}</span>`).join("");
+
+    // Warning
+    const w = document.getElementById("modalWarning");
+    if (avail) {
+      w.innerHTML = `⚠️ <strong>Acompte non remboursable :</strong> Les 250€ d'acompte sont déduits de votre 1er loyer. En cas de désistement, ils sont conservés intégralement.`;
+    } else {
+      w.innerHTML = `🔴 Cette chambre est actuellement occupée. Revenez plus tard ou contactez Laurent pour être mis sur liste d'attente.`;
     }
 
-    loadRooms();
-  </script>
+    // Stripe button
+    const btn = document.getElementById("modalStripeBtn");
+    if (avail) {
+      btn.href = room.stripeLink;
+      btn.className = "modal-btn-stripe";
+      btn.textContent = "💳  Réserver — Payer l'acompte de 250€";
+    } else {
+      btn.href = "mailto:16ruelasseguette@gmail.com?subject=Liste d'attente — Chambre " + room.id;
+      btn.className = "modal-btn-stripe";
+      btn.style.background = "#666";
+      btn.textContent = "✉️  Me mettre sur liste d'attente";
+    }
+
+    document.getElementById("roomModal").classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    document.getElementById("roomModal").classList.remove("open");
+    document.body.style.overflow = "";
+    // Reset btn color
+    document.getElementById("modalStripeBtn").style.background = "";
+  }
+
+  function handleModalClick(e) {
+    if (e.target === document.getElementById("roomModal")) closeModal();
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+
+  /* ============================================================
+     SCROLL REVEAL
+     ============================================================ */
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add("visible");
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+  /* ============================================================
+     HERO ANIMATION
+     ============================================================ */
+  window.addEventListener("load", () => {
+    document.getElementById("hero").classList.add("loaded");
+  });
+
+  /* ============================================================
+     MOBILE MENU
+     ============================================================ */
+  function toggleMenu() {
+    document.getElementById("mobileMenu").classList.toggle("open");
+  }
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  fetchAvailability();
+
+  // Refresh availability every 5 minutes
+  setInterval(fetchAvailability, 5 * 60 * 1000);
+</script>
 </body>
 </html>
