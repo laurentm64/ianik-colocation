@@ -5,6 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maison Ianik — Colocation à Bayonne</title>
   <meta name="description" content="Colocation premium à Bayonne. 9 chambres meublées avec charges incluses dans une maison d'exception.">
+  <link rel="canonical" href="https://laurentm64.github.io/ianik-colocation/">
+
+  <!-- Aperçu lors d'un partage WhatsApp / Facebook / SMS -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Maison Ianik">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:url" content="https://laurentm64.github.io/ianik-colocation/">
+  <meta property="og:title" content="Maison Ianik — Colocation premium à Bayonne">
+  <meta property="og:description" content="9 chambres meublées dans une villa d'exception, 200 € de charges tout compris, à 5 min à pied de l'hôpital de Bayonne. Réservation en ligne.">
+  <meta property="og:image" content="https://laurentm64.github.io/ianik-colocation/images/salon_vue_6.jpg">
+  <meta property="og:image:width" content="1920">
+  <meta property="og:image:height" content="1080">
+  <meta property="og:image:alt" content="Le salon de la Maison Ianik">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Maison Ianik — Colocation premium à Bayonne">
+  <meta name="twitter:description" content="9 chambres meublées, 200 € de charges tout compris, à 5 min de l'hôpital de Bayonne.">
+  <meta name="twitter:image" content="https://laurentm64.github.io/ianik-colocation/images/salon_vue_6.jpg">
+  <meta name="theme-color" content="#b8913a">
+
+  <!-- Favicon : « I » doré sur fond sombre, en SVG inline (aucun fichier à héberger) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23111111'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' fill='%23b8913a' text-anchor='middle'%3EI%3C/text%3E%3C/svg%3E">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -493,12 +515,14 @@
       transition: background 0.2s, transform 0.15s;
     }
     .room-btn:hover { background: var(--gold-light); transform: scale(1.03); }
+    /* Chambre occupée : le bouton reste cliquable (ouvre la liste d'attente),
+       il est seulement visuellement en retrait. */
     .room-btn.disabled {
       background: var(--border);
       color: var(--text-muted);
-      cursor: not-allowed;
+      cursor: pointer;
     }
-    .room-btn.disabled:hover { background: var(--border); transform: none; }
+    .room-btn.disabled:hover { background: var(--cream-dark); transform: none; }
 
     /* ===================== GALERIE PARTIES COMMUNES ===================== */
     #galerie {
@@ -1113,7 +1137,7 @@
     </div>
     <div class="contact-map">
       <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2916.9!2d-1.481!3d43.493!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s16+Rue+de+Lasseguette%2C+64100+Bayonne!5e0!3m2!1sfr!2sfr!4v1"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2916.9!2d-1.4771347!3d43.4797813!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s16+Rue+de+Lasseguette%2C+64100+Bayonne!5e0!3m2!1sfr!2sfr!4v1"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"
         title="Localisation Maison Ianik">
@@ -1126,7 +1150,7 @@
 <footer>
   <div class="footer-brand">Maison <span>Ianik</span></div>
   <p>16 rue de Lasseguette · 64100 Bayonne</p>
-  <p>© 2025 Ianik — Tous droits réservés</p>
+  <p>© 2026 Ianik — Tous droits réservés</p>
 </footer>
 
 <!-- MODAL -->
@@ -1286,15 +1310,22 @@
       const res = await fetch(SHEET_URL, { cache: "no-cache" });
       if (!res.ok) throw new Error("HTTP " + res.status);
       const text = await res.text();
-      const lines = text.trim().split("\n").slice(1); // skip header
+      const lines = text.trim().split(/\r?\n/).slice(1); // skip header
+      const parsed = {};
       lines.forEach(line => {
-        const parts = line.split(",");
-        if (parts.length >= 2) {
-          const num = parseInt(parts[0].trim());
-          const status = parts[1].trim().replace(/"/g, "").replace(/\r/g, "");
-          if (!isNaN(num)) availability[num] = status;
-        }
+        // 1re colonne = n° de chambre, 2e = statut. Les champs peuvent être
+        // entre guillemets et contenir des virgules -> on découpe proprement.
+        const parts = line.match(/("([^"]|"")*"|[^,]*)(,|$)/g) || [];
+        if (parts.length < 2) return;
+        const clean = s => s.replace(/,$/, "").trim().replace(/^"|"$/g, "").replace(/""/g, '"').trim();
+        const num = parseInt(clean(parts[0]), 10);
+        const status = clean(parts[1]);
+        if (!isNaN(num) && status) parsed[num] = status;
       });
+      // Le Sheet doit décrire TOUTES les chambres. S'il en manque une, on ne
+      // garde pas l'ancienne valeur au hasard : la chambre reste "Inconnu"
+      // (= non réservable), jamais réservable par défaut.
+      ROOMS.forEach(r => { availability[r.id] = parsed[r.id] || "Inconnu"; });
       document.getElementById("availability-status").textContent =
         "Disponibilités mises à jour en temps réel · " + new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
     } catch (e) {
@@ -1310,9 +1341,13 @@
   /* ============================================================
      RENDU DES CARTES CHAMBRES
      ============================================================ */
+  // Règle stricte : une chambre n'est réservable QUE si le Sheet dit
+  // explicitement "disponible". Toute autre valeur — statut inconnu, ligne
+  // manquante, Sheet injoignable — la rend non réservable. Ne jamais rendre
+  // ce test permissif : un faux "disponible" = un acompte encaissé pour une
+  // chambre déjà occupée.
   function isAvailable(roomId) {
-    const s = (availability[roomId] || "").toLowerCase();
-    return s.includes("dispo") || s === "";
+    return (availability[roomId] || "").toLowerCase().includes("dispo");
   }
 
   function renderRooms(filterFloor = "all") {
@@ -1321,17 +1356,19 @@
 
     ROOMS.forEach(room => {
       const avail = isAvailable(room.id);
-      const statusText = availability[room.id] || "…";
+      const unknown = !availability[room.id] || availability[room.id] === "Inconnu";
       const hide = filterFloor !== "all" && room.floor !== filterFloor;
 
       const card = document.createElement("div");
       card.className = `room-card${avail ? "" : " unavailable"}`;
       card.dataset.floor = hide ? "hidden" : room.floor;
-      if (avail) card.addEventListener("click", () => openModal(room));
+      // Toutes les cartes sont cliquables : une chambre occupée ouvre la
+      // modale "liste d'attente" (sinon on perd le prospect arrivé trop tôt).
+      card.addEventListener("click", () => openModal(room));
 
       let badgeClass = avail ? "available" : "unavailable";
       let badgeText = avail ? "Disponible" : "Occupée";
-      if (!availability[room.id]) { badgeClass = "loading"; badgeText = "…"; }
+      if (unknown) { badgeClass = "loading"; badgeText = "Nous consulter"; }
 
       card.innerHTML = `
         <div class="room-photo">
@@ -1350,13 +1387,22 @@
           <div class="room-footer">
             <div class="room-price">${room.price}€ <span>/ mois CC</span></div>
             <button class="room-btn${avail ? "" : " disabled"}">
-              ${avail ? "Réserver" : "Occupée"}
+              ${avail ? "Réserver" : (unknown ? "Nous consulter" : "Liste d'attente")}
             </button>
           </div>
         </div>
       `;
       grid.appendChild(card);
     });
+
+    // L'onglet "Toutes" affiche le nombre de chambres réellement libres.
+    const nbLibres = ROOMS.filter(r => isAvailable(r.id)).length;
+    const allTab = document.querySelector('.floor-tab[data-floor="all"]');
+    if (allTab) {
+      allTab.textContent = nbLibres > 0
+        ? `Toutes (${ROOMS.length}) · ${nbLibres} libre${nbLibres > 1 ? "s" : ""}`
+        : `Toutes (${ROOMS.length}) · complet`;
+    }
   }
 
   /* ============================================================
@@ -1390,24 +1436,37 @@
     ].map(t => `<span class="modal-tag">${t}</span>`).join("");
 
     // Warning
+    const unknown = !availability[room.id] || availability[room.id] === "Inconnu";
     const w = document.getElementById("modalWarning");
     if (avail) {
       w.innerHTML = `⚠️ <strong>Acompte non remboursable :</strong> Les 250€ d'acompte sont déduits de votre 1er loyer. En cas de désistement, ils sont conservés intégralement.`;
+    } else if (unknown) {
+      w.innerHTML = `ℹ️ La disponibilité de cette chambre n'a pas pu être vérifiée à l'instant. Contactez-nous, nous vous répondons rapidement.`;
     } else {
-      w.innerHTML = `🔴 Cette chambre est actuellement occupée. Revenez plus tard ou contactez Laurent pour être mis sur liste d'attente.`;
+      w.innerHTML = `🔴 Cette chambre est actuellement occupée. Laissez-nous vos coordonnées : vous serez prévenu en priorité dès qu'elle se libère.`;
     }
 
     // Stripe button
     const btn = document.getElementById("modalStripeBtn");
     if (avail) {
       btn.href = room.stripeLink;
+      btn.setAttribute("target", "_blank");
       btn.className = "modal-btn-stripe";
       btn.textContent = "💳  Réserver — Payer l'acompte de 250€";
     } else {
-      btn.href = "mailto:16ruelasseguette@gmail.com?subject=Liste d'attente — Chambre " + room.id;
+      const sujet = unknown
+        ? `Disponibilité — Chambre ${room.id} ${room.name}`
+        : `Liste d'attente — Chambre ${room.id} ${room.name}`;
+      const corps = unknown
+        ? `Bonjour,\n\nJe souhaite connaître la disponibilité de la chambre ${room.id} (${room.name}).\n\nMerci !`
+        : `Bonjour,\n\nJe souhaite être prévenu(e) en priorité si la chambre ${room.id} (${room.name}) se libère.\n\nMes coordonnées :\n- Nom :\n- Téléphone :\n- Date d'emménagement souhaitée :\n\nMerci !`;
+      btn.href = "mailto:16ruelasseguette@gmail.com"
+        + "?subject=" + encodeURIComponent(sujet)
+        + "&body=" + encodeURIComponent(corps);
+      btn.removeAttribute("target"); // un mailto ne doit pas ouvrir d'onglet vide
       btn.className = "modal-btn-stripe";
       btn.style.background = "#666";
-      btn.textContent = "✉️  Me mettre sur liste d'attente";
+      btn.textContent = unknown ? "✉️  Nous contacter" : "✉️  Me prévenir si elle se libère";
     }
 
     document.getElementById("roomModal").classList.add("open");
