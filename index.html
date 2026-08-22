@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Maison Ianik — Colocation à Bayonne</title>
   <meta name="description" content="Colocation premium à Bayonne. 9 chambres meublées avec charges incluses dans une maison d'exception.">
+  <!-- Site diffusé en direct aux candidats : on ne veut pas qu'il remonte dans Google.
+       Le lien reste parfaitement accessible à qui le reçoit. -->
+  <meta name="robots" content="noindex, nofollow">
   <link rel="canonical" href="https://laurentm64.github.io/ianik-colocation/">
 
   <!-- Aperçu lors d'un partage WhatsApp / Facebook / SMS -->
@@ -45,6 +48,7 @@
       --border:     #ddd8ce;
       --white:      #ffffff;
       --available:  #16a34a;
+      --pending:    #d97706;
       --unavailable:#c0392b;
       --radius:     12px;
       --radius-lg:  20px;
@@ -90,7 +94,11 @@
     .nav-logo span { color: var(--gold-light); }
     .nav-links {
       display: flex; gap: 2rem; list-style: none;
+      white-space: nowrap; /* jamais de libellé cassé sur deux lignes */
     }
+    /* Six entrées : on resserre, puis on bascule sur le burger dès 1080px —
+       en dessous, "Espaces communs" ne tient plus à côté du CTA. */
+    @media (max-width: 1250px) { .nav-links { gap: 1.2rem; } }
     .nav-links a {
       color: rgba(255,255,255,0.75);
       font-size: 0.82rem;
@@ -114,11 +122,19 @@
     .nav-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
     .nav-burger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
     .nav-burger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 2px; transition: all 0.3s; }
+    /* Menu ouvert : les trois barres deviennent une croix. */
+    .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
     /* ===================== HERO ===================== */
     #hero {
       position: relative;
-      height: 100vh; min-height: 600px;
+      /* 100vh d'abord pour les navigateurs anciens, svh ensuite : évite le saut
+         de hauteur quand la barre d'outils mobile se rétracte. */
+      height: 100vh;
+      height: 100svh;
+      min-height: 600px;
       display: flex; align-items: center; justify-content: center;
       overflow: hidden;
     }
@@ -366,6 +382,7 @@
       width: 10px; height: 10px; border-radius: 50%;
     }
     .legend-dot.available { background: var(--available); }
+    .legend-dot.pending { background: var(--pending); }
     .legend-dot.unavailable { background: var(--unavailable); }
     #availability-status {
       font-size: 0.75rem;
@@ -441,6 +458,11 @@
       color: var(--white);
       box-shadow: 0 2px 8px rgba(22,163,74,0.3);
     }
+    .room-badge.pending {
+      background: rgba(217,119,6,0.92);
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(217,119,6,0.3);
+    }
     .room-badge.unavailable {
       background: rgba(192,57,43,0.88);
       color: var(--white);
@@ -480,13 +502,22 @@
       color: var(--dark);
     }
     .room-details {
-      display: flex; gap: 1rem;
+      display: flex; gap: 0.5rem 1rem;
+      flex-wrap: wrap;
       font-size: 0.78rem;
       color: var(--text-muted);
       margin-bottom: 1rem;
     }
     .room-detail-item {
       display: flex; align-items: center; gap: 4px;
+    }
+    /* Chambres à salle d'eau privative : ouvertes aux couples (+50 €/mois). */
+    .room-detail-item.couple {
+      background: var(--gold-pale);
+      color: #7a5000;
+      padding: 2px 9px;
+      border-radius: 20px;
+      font-weight: 600;
     }
     .room-footer {
       display: flex; align-items: center; justify-content: space-between;
@@ -699,6 +730,8 @@
     }
     .footer-brand span { color: var(--gold-light); }
     footer p { font-size: 0.78rem; }
+    .footer-link { color: rgba(255,255,255,0.75); text-decoration: underline; }
+    .footer-link:hover { color: var(--gold-light); }
 
     /* ===================== MODAL ===================== */
     .modal-overlay {
@@ -829,13 +862,38 @@
       display: block;
     }
     .modal-btn-stripe:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(184,145,58,0.45); }
-    .modal-btn-stripe.disabled {
-      background: var(--border);
-      color: var(--text-muted);
-      cursor: not-allowed;
-      box-shadow: none;
+    /* Chambre non réservable : le bouton devient « liste d'attente », en retrait. */
+    .modal-btn-stripe.waitlist { background: #666; box-shadow: none; }
+    .modal-btn-stripe.waitlist:hover { background: #555; box-shadow: none; }
+    /* Second bouton de contact (WhatsApp), à côté du mailto. */
+    .modal-btn-alt {
+      flex: 1;
+      padding: 14px 24px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      border-radius: 50px;
+      text-align: center;
+      display: block;
+      transition: border-color 0.2s, background 0.2s;
     }
-    .modal-btn-stripe.disabled:hover { background: var(--border); transform: none; }
+    .modal-btn-alt:hover { border-color: #25d366; background: #f2fbf5; }
+    /* Message affiché quand la chambre a été prise entre l'affichage et le clic. */
+    .modal-flash {
+      display: none;
+      margin-top: 1rem;
+      padding: 0.9rem 1.2rem;
+      background: #fdecea;
+      border: 1px solid #f5b7b1;
+      border-radius: var(--radius);
+      font-size: 0.85rem;
+      color: #922b21;
+      line-height: 1.5;
+    }
+    .modal-flash.show { display: block; }
 
     /* ===================== ANIMATIONS ===================== */
     @keyframes fadeUp {
@@ -862,6 +920,10 @@
         grid-template-rows: auto;
       }
       .gallery-item:first-child { grid-column: span 2; }
+    }
+    /* Bascule de la navigation sur le burger : plus tôt que le reste de la
+       mise en page, car les 6 entrées + le CTA se touchent en dessous de 1160px. */
+    @media (max-width: 1160px) {
       nav .nav-links, nav .nav-cta { display: none; }
       .nav-burger { display: flex; }
     }
@@ -893,6 +955,21 @@
       border-bottom: 1px solid rgba(255,255,255,0.08);
     }
     .mobile-menu a:last-child { border: none; }
+    /* La nav-cta est masquée sous 900px : on la reprend ici, sinon le CTA
+       principal n'existe pas du tout sur mobile. */
+    .mobile-menu .mobile-cta {
+      margin-top: 0.4rem;
+      padding: 13px 22px;
+      background: var(--gold);
+      color: var(--white);
+      font-weight: 600;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: center;
+      border-radius: 50px;
+      border: none;
+    }
   </style>
 </head>
 <body>
@@ -903,6 +980,7 @@
   <ul class="nav-links">
     <li><a href="#maison">La maison</a></li>
     <li><a href="#chambres">Chambres</a></li>
+    <li><a href="#galerie">Espaces communs</a></li>
     <li><a href="#charges">Charges</a></li>
     <li><a href="#processus">Réservation</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -915,11 +993,13 @@
 
 <!-- Mobile menu -->
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#maison" onclick="toggleMenu()">La maison</a>
-  <a href="#chambres" onclick="toggleMenu()">Les chambres</a>
-  <a href="#charges" onclick="toggleMenu()">Charges incluses</a>
-  <a href="#processus" onclick="toggleMenu()">Processus de réservation</a>
-  <a href="#contact" onclick="toggleMenu()">Contact</a>
+  <a href="#maison" onclick="closeMenu()">La maison</a>
+  <a href="#chambres" onclick="closeMenu()">Les chambres</a>
+  <a href="#galerie" onclick="closeMenu()">Espaces communs</a>
+  <a href="#charges" onclick="closeMenu()">Charges incluses</a>
+  <a href="#processus" onclick="closeMenu()">Processus de réservation</a>
+  <a href="#contact" onclick="closeMenu()">Contact</a>
+  <a href="#chambres" class="mobile-cta" onclick="closeMenu()">Voir les chambres</a>
 </div>
 
 <!-- HERO -->
@@ -1013,6 +1093,7 @@
     </div>
     <div class="availability-legend">
       <div class="legend-item"><div class="legend-dot available"></div> Disponible</div>
+      <div class="legend-item"><div class="legend-dot pending"></div> En cours de réservation</div>
       <div class="legend-item"><div class="legend-dot unavailable"></div> Occupée</div>
     </div>
   </div>
@@ -1150,7 +1231,7 @@
 <footer>
   <div class="footer-brand">Maison <span>Ianik</span></div>
   <p>16 rue de Lasseguette · 64100 Bayonne</p>
-  <p>© 2026 Ianik — Tous droits réservés</p>
+  <p><a href="mentions-legales.html" class="footer-link">Mentions légales</a> · © 2026 Ianik — Tous droits réservés</p>
 </footer>
 
 <!-- MODAL -->
@@ -1183,7 +1264,11 @@
         <a href="#" class="modal-btn-stripe" id="modalStripeBtn" target="_blank" rel="noopener">
           💳 &nbsp;Réserver — Payer l'acompte de 250€
         </a>
+        <a href="#" class="modal-btn-alt" id="modalWhatsappBtn" target="_blank" rel="noopener">
+          💬 &nbsp;WhatsApp
+        </a>
       </div>
+      <div class="modal-flash" id="modalFlash"></div>
     </div>
   </div>
 </div>
@@ -1225,7 +1310,7 @@
       couples: false,
       image: "images/chambre_3.jpg",
       stripeLink: "https://buy.stripe.com/3cI6oJaq1gvOahja0c1Fe02",
-      extras: ["Rideaux dorés", "Luminosité naturelle", "Dressing"]
+      extras: ["Grande chambre", "Rideaux dorés", "Luminosité naturelle", "Dressing"]
     },
     {
       id: 4,
@@ -1304,30 +1389,43 @@
   const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?output=csv`;
 
   let availability = {}; // { 1: "Disponible", 2: "Réservée", ... }
+  let currentFloor = "all";   // étage filtré par l'utilisateur — à préserver au refresh
+  let modalOpen = false;      // ne jamais reconstruire la grille sous une modale ouverte
+  let currentRoom = null;     // chambre affichée dans la modale
+  let renderPending = false;  // un rendu a été différé pendant que la modale était ouverte
+
+  // Télécharge et interprète le CSV publié. Renvoie { 1: "Disponible", ... }
+  // ou lève une exception. Utilisé par le refresh périodique ET par la
+  // revalidation au clic sur « Réserver ».
+  async function loadSheet() {
+    const res = await fetch(SHEET_URL, { cache: "no-cache" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const text = await res.text();
+    const lines = text.trim().split(/\r?\n/).slice(1); // skip header
+    const parsed = {};
+    lines.forEach(line => {
+      // 1re colonne = n° de chambre, 2e = statut. Les champs peuvent être
+      // entre guillemets et contenir des virgules -> on découpe proprement.
+      const parts = line.match(/("([^"]|"")*"|[^,]*)(,|$)/g) || [];
+      if (parts.length < 2) return;
+      const clean = s => s.replace(/,$/, "").trim().replace(/^"|"$/g, "").replace(/""/g, '"').trim();
+      const num = parseInt(clean(parts[0]), 10);
+      const status = clean(parts[1]);
+      if (!isNaN(num) && status) parsed[num] = status;
+    });
+    return parsed;
+  }
 
   async function fetchAvailability() {
     try {
-      const res = await fetch(SHEET_URL, { cache: "no-cache" });
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const text = await res.text();
-      const lines = text.trim().split(/\r?\n/).slice(1); // skip header
-      const parsed = {};
-      lines.forEach(line => {
-        // 1re colonne = n° de chambre, 2e = statut. Les champs peuvent être
-        // entre guillemets et contenir des virgules -> on découpe proprement.
-        const parts = line.match(/("([^"]|"")*"|[^,]*)(,|$)/g) || [];
-        if (parts.length < 2) return;
-        const clean = s => s.replace(/,$/, "").trim().replace(/^"|"$/g, "").replace(/""/g, '"').trim();
-        const num = parseInt(clean(parts[0]), 10);
-        const status = clean(parts[1]);
-        if (!isNaN(num) && status) parsed[num] = status;
-      });
+      const parsed = await loadSheet();
       // Le Sheet doit décrire TOUTES les chambres. S'il en manque une, on ne
       // garde pas l'ancienne valeur au hasard : la chambre reste "Inconnu"
       // (= non réservable), jamais réservable par défaut.
       ROOMS.forEach(r => { availability[r.id] = parsed[r.id] || "Inconnu"; });
       document.getElementById("availability-status").textContent =
-        "Disponibilités mises à jour en temps réel · " + new Date().toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
+        "Disponibilités vérifiées à " +
+        new Date().toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
     } catch (e) {
       console.warn("Impossible de charger les disponibilités :", e);
       document.getElementById("availability-status").textContent =
@@ -1335,28 +1433,48 @@
       // Fallback: all rooms show as loading
       ROOMS.forEach(r => availability[r.id] = "Inconnu");
     }
-    renderRooms();
+    // Une modale ouverte ne doit pas se voir tirer la grille sous les pieds :
+    // on diffère le rendu jusqu'à sa fermeture.
+    if (modalOpen) { renderPending = true; return; }
+    renderRooms(currentFloor);
   }
 
   /* ============================================================
      RENDU DES CARTES CHAMBRES
      ============================================================ */
-  // Règle stricte : une chambre n'est réservable QUE si le Sheet dit
-  // explicitement "disponible". Toute autre valeur — statut inconnu, ligne
-  // manquante, Sheet injoignable — la rend non réservable. Ne jamais rendre
-  // ce test permissif : un faux "disponible" = un acompte encaissé pour une
-  // chambre déjà occupée.
+  // Règle stricte : une chambre n'est réservable QUE si le Sheet contient
+  // EXACTEMENT l'une des valeurs ci-dessous. Toute autre valeur — statut
+  // inconnu, ligne manquante, Sheet injoignable, faute de frappe — la rend
+  // non réservable.
+  //
+  // Ne jamais remplacer cette comparaison par un test « contient » : un faux
+  // "disponible" = un acompte de 250 € encaissé pour une chambre occupée.
+  // (Un `.includes("dispo")` acceptait « Indisponible » et « Non disponible ».)
+  const STATUTS_RESERVABLES = ["disponible", "libre"];
+  const STATUTS_EN_COURS = ["en cours de réservation", "en cours de reservation", "en cours"];
+
+  function statutDe(roomId) {
+    return (availability[roomId] || "").trim().toLowerCase();
+  }
   function isAvailable(roomId) {
-    return (availability[roomId] || "").toLowerCase().includes("dispo");
+    return STATUTS_RESERVABLES.includes(statutDe(roomId));
+  }
+  function isPending(roomId) {
+    return STATUTS_EN_COURS.includes(statutDe(roomId));
+  }
+  function isUnknown(roomId) {
+    const s = statutDe(roomId);
+    return !s || s === "inconnu";
   }
 
-  function renderRooms(filterFloor = "all") {
+  function renderRooms(filterFloor = currentFloor) {
     const grid = document.getElementById("roomsGrid");
     grid.innerHTML = "";
 
     ROOMS.forEach(room => {
       const avail = isAvailable(room.id);
-      const unknown = !availability[room.id] || availability[room.id] === "Inconnu";
+      const pending = isPending(room.id);
+      const unknown = isUnknown(room.id);
       const hide = filterFloor !== "all" && room.floor !== filterFloor;
 
       const card = document.createElement("div");
@@ -1366,13 +1484,14 @@
       // modale "liste d'attente" (sinon on perd le prospect arrivé trop tôt).
       card.addEventListener("click", () => openModal(room));
 
-      let badgeClass = avail ? "available" : "unavailable";
-      let badgeText = avail ? "Disponible" : "Occupée";
-      if (unknown) { badgeClass = "loading"; badgeText = "Nous consulter"; }
+      let badgeClass = "unavailable", badgeText = "Occupée", btnText = "Liste d'attente";
+      if (avail)        { badgeClass = "available"; badgeText = "Disponible";             btnText = "Réserver"; }
+      else if (pending) { badgeClass = "pending";   badgeText = "En cours de réservation"; btnText = "Me prévenir"; }
+      else if (unknown) { badgeClass = "loading";   badgeText = "Nous consulter";          btnText = "Nous consulter"; }
 
       card.innerHTML = `
         <div class="room-photo">
-          <img src="${room.image}" alt="Chambre ${room.id}" loading="lazy">
+          <img src="${room.image}" alt="Chambre ${room.id} — ${room.name}" loading="lazy">
           <div class="room-badge ${badgeClass}">${badgeText}</div>
           <div class="room-floor-tag">${room.floor}</div>
         </div>
@@ -1383,12 +1502,11 @@
           </div>
           <div class="room-details">
             <span class="room-detail-item">🚿 ${room.sde}</span>
+            ${room.couples ? '<span class="room-detail-item couple">💑 Couple accepté</span>' : ""}
           </div>
           <div class="room-footer">
             <div class="room-price">${room.price}€ <span>/ mois CC</span></div>
-            <button class="room-btn${avail ? "" : " disabled"}">
-              ${avail ? "Réserver" : (unknown ? "Nous consulter" : "Liste d'attente")}
-            </button>
+            <button class="room-btn${avail ? "" : " disabled"}">${btnText}</button>
           </div>
         </div>
       `;
@@ -1412,8 +1530,10 @@
     tab.addEventListener("click", () => {
       document.querySelectorAll(".floor-tab").forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
-      const floor = tab.dataset.floor;
-      renderRooms(floor);
+      // Mémorisé : sans ça, le rafraîchissement automatique repartait sur
+      // "all" et réaffichait les 9 chambres alors que l'onglet restait actif.
+      currentFloor = tab.dataset.floor;
+      renderRooms(currentFloor);
     });
   });
 
@@ -1421,7 +1541,8 @@
      MODAL
      ============================================================ */
   function openModal(room) {
-    const avail = isAvailable(room.id);
+    currentRoom = room;
+    document.getElementById("modalFlash").classList.remove("show");
     document.getElementById("modalImg").src = room.image;
     document.getElementById("modalImg").alt = room.name;
     document.getElementById("modalTitle").textContent = `Ch. ${room.id} — ${room.name}`;
@@ -1432,27 +1553,49 @@
     tags.innerHTML = [
       `📍 ${room.floor}`,
       `🚿 ${room.sde}`,
-...room.extras
+      ...(room.couples ? [`💑 Couple accepté — ${room.price + 50}€/mois en couple`] : []),
+      ...room.extras
     ].map(t => `<span class="modal-tag">${t}</span>`).join("");
 
-    // Warning
-    const unknown = !availability[room.id] || availability[room.id] === "Inconnu";
+    applyModalState(room);
+
+    document.getElementById("roomModal").classList.add("open");
+    document.body.style.overflow = "hidden";
+    modalOpen = true;
+
+    // Les liens Stripe restant actifs en permanence, le site est seul à
+    // empêcher un paiement sur chambre occupée. On relit donc le Sheet à
+    // l'ouverture de la modale, et on reconfigure le bouton si le statut a
+    // changé depuis le dernier rafraîchissement.
+    revalidate(room);
+  }
+
+  // Configure warning, boutons et libellés selon l'état courant de la chambre.
+  function applyModalState(room) {
+    const avail = isAvailable(room.id);
+    const pending = isPending(room.id);
+    const unknown = isUnknown(room.id);
+
     const w = document.getElementById("modalWarning");
     if (avail) {
       w.innerHTML = `⚠️ <strong>Acompte non remboursable :</strong> Les 250€ d'acompte sont déduits de votre 1er loyer. En cas de désistement, ils sont conservés intégralement.`;
+    } else if (pending) {
+      w.innerHTML = `🟠 Une réservation est en cours sur cette chambre. Laissez-nous vos coordonnées : si elle ne se confirme pas, vous serez contacté en priorité.`;
     } else if (unknown) {
       w.innerHTML = `ℹ️ La disponibilité de cette chambre n'a pas pu être vérifiée à l'instant. Contactez-nous, nous vous répondons rapidement.`;
     } else {
       w.innerHTML = `🔴 Cette chambre est actuellement occupée. Laissez-nous vos coordonnées : vous serez prévenu en priorité dès qu'elle se libère.`;
     }
 
-    // Stripe button
     const btn = document.getElementById("modalStripeBtn");
+    const wa = document.getElementById("modalWhatsappBtn");
+
     if (avail) {
       btn.href = room.stripeLink;
       btn.setAttribute("target", "_blank");
       btn.className = "modal-btn-stripe";
       btn.textContent = "💳  Réserver — Payer l'acompte de 250€";
+      wa.style.display = "none";
     } else {
       const sujet = unknown
         ? `Disponibilité — Chambre ${room.id} ${room.name}`
@@ -1464,25 +1607,67 @@
         + "?subject=" + encodeURIComponent(sujet)
         + "&body=" + encodeURIComponent(corps);
       btn.removeAttribute("target"); // un mailto ne doit pas ouvrir d'onglet vide
-      btn.className = "modal-btn-stripe";
-      btn.style.background = "#666";
+      btn.className = "modal-btn-stripe waitlist";
       btn.textContent = unknown ? "✉️  Nous contacter" : "✉️  Me prévenir si elle se libère";
+      // Le mailto ne déclenche rien sur beaucoup de mobiles et en webmail :
+      // WhatsApp évite de perdre le candidat à cet instant précis.
+      wa.href = "https://wa.me/33617260218?text=" + encodeURIComponent(corps);
+      wa.style.display = "";
     }
+  }
 
-    document.getElementById("roomModal").classList.add("open");
-    document.body.style.overflow = "hidden";
+  // Relit le Sheet et met la modale à jour si le statut a bougé.
+  // En cas d'échec réseau on ne bloque personne : l'état affiché a moins de
+  // 90 secondes, et refuser un vrai client sur une panne serait pire.
+  async function revalidate(room) {
+    let parsed;
+    try {
+      parsed = await loadSheet();
+    } catch (e) {
+      console.warn("Revalidation impossible :", e);
+      return;
+    }
+    if (!modalOpen || currentRoom !== room) return; // l'utilisateur est passé à autre chose
+
+    const avant = isAvailable(room.id);
+    ROOMS.forEach(r => { availability[r.id] = parsed[r.id] || "Inconnu"; });
+    const apres = isAvailable(room.id);
+
+    if (avant !== apres) {
+      applyModalState(room);
+      const flash = document.getElementById("modalFlash");
+      if (avant && !apres) {
+        flash.textContent = "Cette chambre vient d'être réservée. Elle n'est plus disponible au paiement — laissez-nous vos coordonnées pour être prévenu en priorité.";
+        flash.classList.add("show");
+      }
+      renderPending = true; // la grille sera reconstruite à la fermeture
+    }
   }
 
   function closeModal() {
     document.getElementById("roomModal").classList.remove("open");
     document.body.style.overflow = "";
-    // Reset btn color
-    document.getElementById("modalStripeBtn").style.background = "";
+    document.getElementById("modalFlash").classList.remove("show");
+    modalOpen = false;
+    currentRoom = null;
+    if (renderPending) { renderPending = false; renderRooms(currentFloor); }
   }
 
   function handleModalClick(e) {
     if (e.target === document.getElementById("roomModal")) closeModal();
   }
+
+  // Dernier garde-fou, synchrone : si la chambre n'est plus réservable au
+  // moment du clic, on n'ouvre pas Stripe.
+  document.getElementById("modalStripeBtn").addEventListener("click", e => {
+    if (currentRoom && e.currentTarget.getAttribute("target") === "_blank" && !isAvailable(currentRoom.id)) {
+      e.preventDefault();
+      applyModalState(currentRoom);
+      const flash = document.getElementById("modalFlash");
+      flash.textContent = "Cette chambre vient d'être réservée. Elle n'est plus disponible au paiement.";
+      flash.classList.add("show");
+    }
+  });
 
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
 
@@ -1510,17 +1695,45 @@
   /* ============================================================
      MOBILE MENU
      ============================================================ */
-  function toggleMenu() {
-    document.getElementById("mobileMenu").classList.toggle("open");
+  function setMenu(open) {
+    document.getElementById("mobileMenu").classList.toggle("open", open);
+    document.getElementById("burgerBtn").classList.toggle("open", open);
   }
+  function toggleMenu() {
+    setMenu(!document.getElementById("mobileMenu").classList.contains("open"));
+  }
+  function closeMenu() { setMenu(false); }
+
+  // Clic à l'extérieur : le menu se referme (il restait ouvert jusqu'ici).
+  document.addEventListener("click", e => {
+    const menu = document.getElementById("mobileMenu");
+    if (!menu.classList.contains("open")) return;
+    if (menu.contains(e.target) || document.getElementById("burgerBtn").contains(e.target)) return;
+    closeMenu();
+  });
+
+  // Retour en largeur desktop : le menu mobile n'a plus lieu d'être.
+  // Seuil aligné sur le point de bascule CSS de la navigation (1160px).
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 1160) closeMenu();
+  });
 
   /* ============================================================
      INIT
      ============================================================ */
   fetchAvailability();
 
-  // Refresh availability every 5 minutes
-  setInterval(fetchAvailability, 5 * 60 * 1000);
+  // Make bascule le Sheet en ~1 seconde après un paiement : c'est désormais ce
+  // rafraîchissement qui domine le délai d'affichage. 90 s, et rien ne part
+  // quand l'onglet est en arrière-plan (le CSV pèse 148 octets).
+  setInterval(() => {
+    if (document.visibilityState === "visible") fetchAvailability();
+  }, 90 * 1000);
+
+  // Retour sur l'onglet : on remet l'affichage à jour tout de suite.
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") fetchAvailability();
+  });
 </script>
 </body>
 </html>
