@@ -1563,10 +1563,12 @@
     document.body.style.overflow = "hidden";
     modalOpen = true;
 
-    // Les liens Stripe restant actifs en permanence, le site est seul à
-    // empêcher un paiement sur chambre occupée. On relit donc le Sheet à
-    // l'ouverture de la modale, et on reconfigure le bouton si le statut a
-    // changé depuis le dernier rafraîchissement.
+    // Seconde ligne de défense. Le verrou principal est ailleurs : un Apps
+    // Script attaché au Google Sheet ferme chez Stripe le Payment Link des
+    // chambres occupées (vérifié dans les deux sens le 22/08/2026). Ici on
+    // relit le Sheet à l'ouverture de la fiche pour éviter d'envoyer
+    // quelqu'un vers un lien fermé, et on reconfigure le bouton si le statut
+    // a changé depuis le dernier rafraîchissement.
     revalidate(room);
   }
 
